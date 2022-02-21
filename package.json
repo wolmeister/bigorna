@@ -1,0 +1,8 @@
+{
+  "author": "Victor Wolmeister",
+  "private": true,
+  "scripts": {
+    "api": "pnpm --filter @bigorna/api",
+    "web": "pnpm --filter @bigorna/web"
+  }
+}

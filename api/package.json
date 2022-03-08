@@ -5,12 +5,16 @@
   "author": "Victor Wolmeister",
   "scripts": {
     "dev": "tsnd --respawn --transpile-only --clear -r dotenv/config src/index.ts",
-    "build": "rimraf dist && tsc"
+    "build": "rimraf dist && tsc",
+    "gen": "prisma generate",
+    "prisma": "prisma"
   },
   "dependencies": {
+    "@prisma/client": "^3.10.0",
     "@sinclair/typebox": "^0.23.4",
     "fastify": "^3.27.2",
-    "fastify-swagger": "^4.17.0"
+    "fastify-swagger": "^4.17.0",
+    "prisma": "^3.10.0"
   },
   "devDependencies": {
     "@tsconfig/node16": "^1.0.2",

@@ -1,0 +1,108 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model User {
+  id             String   @id @default(uuid())
+  username       String   @unique
+  email          String   @unique
+  password       String
+  role           Role     @default(USER)
+  avatarId       String?
+  avatarBlurhash String?
+  // Relations
+  addons         Addon[]
+  // Dates
+  updatedAt      DateTime @updatedAt
+  createdAt      DateTime @default(now())
+}
+
+model Game {
+  id             String         @id @default(uuid())
+  name           String         @unique
+  posterId       String
+  posterBlurhash String
+  // Relations
+  gameCategories GameCategory[]
+  addons         Addon[]
+  // Dates
+  updatedAt      DateTime       @updatedAt
+  createdAt      DateTime       @default(now())
+}
+
+model GameCategory {
+  id           String   @id @default(uuid())
+  name         String
+  iconId       String
+  iconBlurhash String
+  // Relations
+  gameId       String
+  game         Game     @relation(fields: [gameId], references: [id])
+  addons       Addon[]
+  // Dates
+  updatedAt    DateTime @updatedAt
+  createdAt    DateTime @default(now())
+
+  @@unique([name, gameId])
+}
+
+model Addon {
+  id                String         @id @default(uuid())
+  name              String
+  description       String
+  latestVersion     String
+  latestGameVersion String
+  downloads         BigInt
+  rating            Int
+  // Relations
+  uploaderId        String
+  uploader          User           @relation(fields: [uploaderId], references: [id])
+  gameId            String
+  game              Game           @relation(fields: [gameId], references: [id])
+  gameCategoryId    String
+  gameCategory      GameCategory   @relation(fields: [gameCategoryId], references: [id])
+  versions          AddonVersion[]
+  reviews           AddonReview[]
+  // Dates
+  updatedAt         DateTime       @updatedAt
+  createdAt         DateTime       @default(now())
+
+  @@unique([name, gameId])
+}
+
+model AddonVersion {
+  id          String   @id @default(uuid())
+  version     String
+  gameVersion String
+  fileId      String
+  changelog   String
+  downloads   BigInt
+  // Relations
+  addonId     String
+  addon       Addon    @relation(fields: [addonId], references: [id])
+  // Dates
+  updatedAt   DateTime @updatedAt
+  createdAt   DateTime @default(now())
+}
+
+model AddonReview {
+  id        String   @id @default(uuid())
+  rating    Int
+  comment   String
+  // Relations
+  addonId   String
+  addon     Addon    @relation(fields: [addonId], references: [id])
+  // Dates
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+}

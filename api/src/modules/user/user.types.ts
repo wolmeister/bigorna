@@ -1,8 +1,8 @@
 import { Static, Type } from '@sinclair/typebox';
 
 // Common
-const UserResponse = Type.Object({
-  id: Type.String({ format: 'uuid' }),
+export const UserResponse = Type.Object({
+  id: Type.String(),
   username: Type.String(),
   email: Type.String({ format: 'email' }),
   avatarId: Type.Union([Type.String(), Type.Null()]),
@@ -11,10 +11,14 @@ const UserResponse = Type.Object({
   createdAt: Type.String({ format: 'date-time' }),
 });
 
-type UserResponseType = Static<typeof UserResponse>;
+export type UserResponseType = Static<typeof UserResponse>;
 
 // Create user
-export const CreateUser = Type.Object({});
+export const CreateUser = Type.Object({
+  username: Type.String(),
+  email: Type.String({ format: 'email' }),
+  password: Type.String({ minLength: 6 }),
+});
 
 export type CreateUserType = Static<typeof CreateUser>;
 

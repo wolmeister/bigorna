@@ -12,7 +12,9 @@ interface UserService {
 }
 
 class UserServiceImpl implements UserService {
-  createUser(data: CreateUserType): Promise<User> {}
+  async createUser(data: CreateUserType): Promise<User> {
+    return prisma.user.create({ data });
+  }
 
   updateUser(data: UpdateUserType): Promise<User> {}
 

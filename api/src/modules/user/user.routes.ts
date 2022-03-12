@@ -2,7 +2,15 @@ import { FastifyPluginAsync } from 'fastify';
 
 import { prisma } from '../../prisma';
 import { UserService } from './user.services';
-import { FindUsersQuery, FindUsersQueryType, FindUsersResponse } from './user.types';
+import {
+  CreateUser,
+  CreateUserType,
+  FindUsersQuery,
+  FindUsersQueryType,
+  FindUsersResponse,
+  UserResponse,
+  UserResponseType,
+} from './user.types';
 
 export const userRoutes: FastifyPluginAsync = async server => {
   server.get<{ Querystring: FindUsersQueryType }>(
@@ -40,12 +48,22 @@ export const userRoutes: FastifyPluginAsync = async server => {
     (request, reply) => {}
   );
 
-  server.post(
+  server.post<{ Body: CreateUserType; Reply: UserResponseType }>(
     '/users',
     {
-      schema: { tags: ['Users'] },
+      schema: {
+        tags: ['Users'],
+        body: CreateUser,
+        response: {
+          201: UserResponse,
+          // @TODO: Add errors to validations
+        },
+      },
     },
-    (request, reply) => {}
+    async (request, reply) => {
+      const user = await UserService.createUser(request.body);
+      return reply.status(201).send(user);
+    }
   );
 
   server.patch(

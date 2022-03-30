@@ -13,7 +13,7 @@ enum Role {
 }
 
 model User {
-  id             String   @id @default(uuid())
+  id             String   @id @default(cuid())
   username       String   @unique
   email          String   @unique
   password       String
@@ -28,7 +28,7 @@ model User {
 }
 
 model Game {
-  id             String         @id @default(uuid())
+  id             String         @id @default(cuid())
   name           String         @unique
   posterId       String
   posterBlurhash String
@@ -41,7 +41,7 @@ model Game {
 }
 
 model GameCategory {
-  id           String   @id @default(uuid())
+  id           String   @id @default(cuid())
   name         String
   iconId       String
   iconBlurhash String
@@ -57,7 +57,7 @@ model GameCategory {
 }
 
 model Addon {
-  id                String         @id @default(uuid())
+  id                String         @id @default(cuid())
   name              String
   description       String
   latestVersion     String
@@ -81,7 +81,7 @@ model Addon {
 }
 
 model AddonVersion {
-  id          String   @id @default(uuid())
+  id          String   @id @default(cuid())
   version     String
   gameVersion String
   fileId      String
@@ -96,7 +96,7 @@ model AddonVersion {
 }
 
 model AddonReview {
-  id        String   @id @default(uuid())
+  id        String   @id @default(cuid())
   rating    Int
   comment   String
   // Relations

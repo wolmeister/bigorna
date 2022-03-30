@@ -1,34 +1,61 @@
 import { Connection, Edge, findManyCursorConnection } from '@devoxa/prisma-relay-cursor-connection';
 import { User } from '@prisma/client';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 
 import { prisma } from '../../prisma';
-import { CreateUserType, UpdateUserType } from './user.types';
+import { CreateUser, FindUsersQuery, UpdateUser, UpdateUserRole } from './user.schemas';
 
 interface UserService {
-  createUser(data: CreateUserType): Promise<User>;
-  updateUser(data: UpdateUserType): Promise<User>;
+  findUsers(query: FindUsersQuery): Promise<Connection<User>>;
   findUserById(id: User['id']): Promise<User | null>;
-  findUsers(): Promise<Connection<User>>;
+  createUser(data: CreateUser): Promise<User>;
+  updateUser(id: User['id'], data: UpdateUser): Promise<User>;
+  updateUserRole(id: User['id'], data: UpdateUserRole): Promise<User>;
 }
 
 class UserServiceImpl implements UserService {
-  async createUser(data: CreateUserType): Promise<User> {
-    return prisma.user.create({ data });
+  findUsers(query: FindUsersQuery): Promise<Connection<User, Edge<User>>> {
+    return findManyCursorConnection(
+      args => prisma.user.findMany(args),
+      () => prisma.user.count(),
+      query
+    );
   }
-
-  updateUser(data: UpdateUserType): Promise<User> {}
 
   findUserById(id: string): Promise<User | null> {
     return prisma.user.findUnique({ where: { id } });
   }
 
-  findUsers(): Promise<Connection<User, Edge<User>>> {
-    return findManyCursorConnection(
-      args => prisma.user.findMany(args),
-      () => prisma.user.count()
-      // {}
-      // { first: 5, after: '5c11e0fa-fd6b-44ee-9016-0809ee2f2b9a' } // typeof ConnectionArguments
-    );
+  async createUser(data: CreateUser): Promise<User> {
+    // try {
+    return prisma.user.create({ data });
+    // } catch (err) {
+    //   if (err instanceof PrismaClientKnownRequestError) {
+    //     if (err.code === 'P2002') {
+    //     }
+    //   }
+    //   throw err;
+    // }
+  }
+
+  updateUser(id: User['id'], data: UpdateUser): Promise<User> {
+    return prisma.user.update({
+      where: {
+        id,
+      },
+      data,
+    });
+    // TODO: Handle P2025
+  }
+
+  updateUserRole(id: User['id'], data: UpdateUserRole): Promise<User> {
+    return prisma.user.update({
+      where: {
+        id,
+      },
+      data,
+    });
+    // TODO: Handle P2025
   }
 }
 

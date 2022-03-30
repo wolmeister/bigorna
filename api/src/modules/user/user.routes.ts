@@ -1,61 +1,75 @@
 import { FastifyPluginAsync } from 'fastify';
 
-import { prisma } from '../../prisma';
-import { UserService } from './user.services';
 import {
   CreateUser,
-  CreateUserType,
+  CreateUserSchema,
+  FindUserParams,
+  FindUserParamsSchema,
   FindUsersQuery,
-  FindUsersQueryType,
+  FindUsersQuerySchema,
   FindUsersResponse,
+  FindUsersResponseSchema,
+  UpdateUser,
+  UpdateUserParams,
+  UpdateUserParamsSchema,
+  UpdateUserRole,
+  UpdateUserRoleParams,
+  UpdateUserRoleParamsSchema,
+  UpdateUserRoleSchema,
+  UpdateUserSchema,
   UserResponse,
-  UserResponseType,
-} from './user.types';
+  UserResponseSchema,
+} from './user.schemas';
+import { UserService } from './user.services';
 
 export const userRoutes: FastifyPluginAsync = async server => {
-  server.get<{ Querystring: FindUsersQueryType }>(
+  server.get<{ Querystring: FindUsersQuery; Reply: FindUsersResponse }>(
     '/users',
     {
       schema: {
         tags: ['Users'],
-        querystring: FindUsersQuery,
+        querystring: FindUsersQuerySchema,
         response: {
-          200: FindUsersResponse,
+          200: FindUsersResponseSchema,
+          // @TODO: Add errors to validations
         },
       },
     },
     async (request, reply) => {
-      console.log('query', request.query);
-
-      UserService.findUsers().then(console.log);
-
-      const users = await prisma.user.findMany({
-        take: request.query.take,
-        skip: request.query.cursor ? 1 : 0,
-        ...(request.query.cursor ? { cursor: { id: request.query.cursor } } : null),
-      });
-      console.log('users', users);
-
-      return reply.send(users);
+      const users = await UserService.findUsers(request.query);
+      return reply.status(200).send(users);
     }
   );
 
-  server.get(
+  server.get<{ Reply: UserResponse; Params: FindUserParams }>(
     '/users/:id',
     {
-      schema: { tags: ['Users'] },
+      schema: {
+        tags: ['Users'],
+        params: FindUserParamsSchema,
+        response: {
+          200: UserResponseSchema,
+          // @TODO: Add errors to 404 and validation
+        },
+      },
     },
-    (request, reply) => {}
+    async (request, reply) => {
+      const user = await UserService.findUserById(request.params.id);
+      if (!user) {
+        return reply.status(404).send();
+      }
+      return reply.status(200).send(user);
+    }
   );
 
-  server.post<{ Body: CreateUserType; Reply: UserResponseType }>(
+  server.post<{ Body: CreateUser; Reply: UserResponse }>(
     '/users',
     {
       schema: {
         tags: ['Users'],
-        body: CreateUser,
+        body: CreateUserSchema,
         response: {
-          201: UserResponse,
+          201: UserResponseSchema,
           // @TODO: Add errors to validations
         },
       },
@@ -66,19 +80,41 @@ export const userRoutes: FastifyPluginAsync = async server => {
     }
   );
 
-  server.patch(
+  server.patch<{ Body: UpdateUser; Reply: UserResponse; Params: UpdateUserParams }>(
     '/users/:id',
     {
-      schema: { tags: ['Users'] },
+      schema: {
+        tags: ['Users'],
+        body: UpdateUserSchema,
+        params: UpdateUserParamsSchema,
+        response: {
+          200: UserResponseSchema,
+          // @TODO: Add errors to validations
+        },
+      },
     },
-    (request, reply) => {}
+    async (request, reply) => {
+      const user = await UserService.updateUser(request.params.id, request.body);
+      return reply.status(200).send(user);
+    }
   );
 
-  server.put(
+  server.put<{ Body: UpdateUserRole; Reply: UserResponse; Params: UpdateUserRoleParams }>(
     '/users/:id/roles',
     {
-      schema: { tags: ['Users'] },
+      schema: {
+        tags: ['Users'],
+        body: UpdateUserRoleSchema,
+        params: UpdateUserRoleParamsSchema,
+        response: {
+          200: UserResponseSchema,
+          // @TODO: Add errors to validations
+        },
+      },
     },
-    (request, reply) => {}
+    async (request, reply) => {
+      const user = await UserService.updateUserRole(request.params.id, request.body);
+      return reply.status(200).send(user);
+    }
   );
 };

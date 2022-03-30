@@ -1,5 +1,6 @@
 import fastify from 'fastify';
 import swagger from 'fastify-swagger';
+
 import { userRoutes } from './modules/user';
 
 const app = fastify();

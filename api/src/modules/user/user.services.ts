@@ -1,8 +1,8 @@
 import { Connection, Edge, findManyCursorConnection } from '@devoxa/prisma-relay-cursor-connection';
 import { User } from '@prisma/client';
-import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 
 import { prisma } from '../../prisma';
+import { formatCreateUpdateUserError, formatFindUserError } from './user.errors';
 import { CreateUser, FindUsersQuery, UpdateUser, UpdateUserRole } from './user.schemas';
 
 interface UserService {
@@ -22,40 +22,46 @@ class UserServiceImpl implements UserService {
     );
   }
 
-  findUserById(id: string): Promise<User | null> {
-    return prisma.user.findUnique({ where: { id } });
+  async findUserById(id: string): Promise<User> {
+    try {
+      return await prisma.user.findUnique({ where: { id }, rejectOnNotFound: true });
+    } catch (error) {
+      throw formatFindUserError(error);
+    }
   }
 
   async createUser(data: CreateUser): Promise<User> {
-    // try {
-    return prisma.user.create({ data });
-    // } catch (err) {
-    //   if (err instanceof PrismaClientKnownRequestError) {
-    //     if (err.code === 'P2002') {
-    //     }
-    //   }
-    //   throw err;
-    // }
+    try {
+      return await prisma.user.create({ data });
+    } catch (error) {
+      throw formatCreateUpdateUserError(error);
+    }
   }
 
-  updateUser(id: User['id'], data: UpdateUser): Promise<User> {
-    return prisma.user.update({
-      where: {
-        id,
-      },
-      data,
-    });
-    // TODO: Handle P2025
+  async updateUser(id: User['id'], data: UpdateUser): Promise<User> {
+    try {
+      return await prisma.user.update({
+        where: {
+          id,
+        },
+        data,
+      });
+    } catch (error) {
+      throw formatCreateUpdateUserError(error);
+    }
   }
 
-  updateUserRole(id: User['id'], data: UpdateUserRole): Promise<User> {
-    return prisma.user.update({
-      where: {
-        id,
-      },
-      data,
-    });
-    // TODO: Handle P2025
+  async updateUserRole(id: User['id'], data: UpdateUserRole): Promise<User> {
+    try {
+      return await prisma.user.update({
+        where: {
+          id,
+        },
+        data,
+      });
+    } catch (error) {
+      throw formatCreateUpdateUserError(error);
+    }
   }
 }
 

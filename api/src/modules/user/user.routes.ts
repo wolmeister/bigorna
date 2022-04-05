@@ -55,9 +55,6 @@ export const userRoutes: FastifyPluginAsync = async server => {
     },
     async (request, reply) => {
       const user = await UserService.findUserById(request.params.id);
-      if (!user) {
-        return reply.status(404).send();
-      }
       return reply.status(200).send(user);
     }
   );

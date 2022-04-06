@@ -1,5 +1,6 @@
 import { Connection, Edge, findManyCursorConnection } from '@devoxa/prisma-relay-cursor-connection';
 import { User } from '@prisma/client';
+import { hash } from 'bcryptjs';
 
 import { prisma } from '../../prisma';
 import { formatCreateUpdateUserError, formatFindUserError } from './user.errors';
@@ -7,7 +8,8 @@ import { CreateUser, FindUsersQuery, UpdateUser, UpdateUserRole } from './user.s
 
 interface UserService {
   findUsers(query: FindUsersQuery): Promise<Connection<User>>;
-  findUserById(id: User['id']): Promise<User | null>;
+  findUserById(id: User['id']): Promise<User>;
+  findUserByEmail(email: User['email']): Promise<User>;
   createUser(data: CreateUser): Promise<User>;
   updateUser(id: User['id'], data: UpdateUser): Promise<User>;
   updateUserRole(id: User['id'], data: UpdateUserRole): Promise<User>;
@@ -30,9 +32,22 @@ class UserServiceImpl implements UserService {
     }
   }
 
+  async findUserByEmail(email: string): Promise<User> {
+    try {
+      return await prisma.user.findUnique({ where: { email }, rejectOnNotFound: true });
+    } catch (error) {
+      throw formatFindUserError(error);
+    }
+  }
+
   async createUser(data: CreateUser): Promise<User> {
     try {
-      return await prisma.user.create({ data });
+      return await prisma.user.create({
+        data: {
+          ...data,
+          password: await this.encryptPassword(data.password),
+        },
+      });
     } catch (error) {
       throw formatCreateUpdateUserError(error);
     }
@@ -44,7 +59,10 @@ class UserServiceImpl implements UserService {
         where: {
           id,
         },
-        data,
+        data: {
+          ...data,
+          password: await this.encryptPassword(data.password),
+        },
       });
     } catch (error) {
       throw formatCreateUpdateUserError(error);
@@ -62,6 +80,10 @@ class UserServiceImpl implements UserService {
     } catch (error) {
       throw formatCreateUpdateUserError(error);
     }
+  }
+
+  private encryptPassword(password: string): Promise<string> {
+    return hash(password, 12);
   }
 }
 

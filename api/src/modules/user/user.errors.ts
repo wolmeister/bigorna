@@ -1,6 +1,8 @@
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 import createError, { FastifyError } from 'fastify-error';
 
+import { logger } from '../../logger';
+
 const UnexpectedUserError = createError('UNEXPECTED_USER_ERROR', 'Unexpected user error', 500);
 const UserNotFoundError = createError('USER_NOT_FOUND', 'User not found', 404);
 const UserEmailNotUniqueError = createError(
@@ -34,6 +36,7 @@ export function formatCreateUpdateUserError(error: unknown): FastifyError {
     }
   }
 
+  logger.error('Unexpected error while creating/updating user', error);
   return new UnexpectedUserError();
 }
 
@@ -43,5 +46,7 @@ export function formatFindUserError(error: unknown): FastifyError {
       return new UserNotFoundError();
     }
   }
+
+  logger.error('Unexpected error while finding user', error);
   return new UnexpectedUserError();
 }

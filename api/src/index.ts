@@ -1,9 +1,10 @@
 import { app } from './app';
+import { logger } from './logger';
 
 app.listen(8080, (err, address) => {
   if (err) {
-    console.error(err);
+    logger.error('Unexpected error while initializing the server', err);
     process.exit(1);
   }
-  console.log(`Server listening at ${address}`);
+  logger.info(`Server listening at ${address}`);
 });

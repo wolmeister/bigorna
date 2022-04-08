@@ -1,11 +1,15 @@
 # BIGORNA
 
-# Database
+<p align="center">
+  <img src="https://raw.githubusercontent.com/wolmeister/bigorna/main/web/public/favicon.png" />
+</p>
 
+# Objective
+# Database
 # Installation
 You need:
-* Node
-* pnpm
+* Node ```https://nodejs.org/en/```
+* pnpm ```if you have npm run: npm install -g pnpm```
 
 clone this repository
 ```bash
@@ -15,7 +19,9 @@ go to /bigorna and run:
 ```bash
 pnpm install
 ```
-API
+
+## Run project
+### API
 
 go to /bigorna/api and run:
 ```bash
@@ -26,7 +32,7 @@ Start server:
 pnpm run dev
 ```
 
-WEB
+### WEB
 
 go to /bigorna/web and start server:
 ```bash

@@ -16,6 +16,7 @@ go to /bigorna and run:
 pnpm install
 ```
 API
+
 go to /bigorna/api and run:
 ```bash
 pnpm run gen

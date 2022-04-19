@@ -1,7 +1,7 @@
 # BIGORNA
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/wolmeister/bigorna/main/web/public/favicon.png" />
+  <img src="https://raw.githubusercontent.com/wolmeister/bigorna/main/web/public/favicon.png" width="400" />
 </p>
 
 # Objective

@@ -8,9 +8,10 @@
 This project aims to create an environment for publishing and disseminating mods/addons
 # Database
 # Technologies
+<p>
 <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Node.js_logo.svg/1200px-Node.js_logo.svg.png" alt="drawing" width="200"/>
-<img src="https://www.google.com/url?sa=i&url=https%3A%2F%2Frodolfopeixoto.medium.com%2Fo-que-eu-preciso-para-aprender-react-ddc49b151e64&psig=AOvVaw2BbFHh_vfXN5CPskdBKC48&ust=1650494251155000&source=images&cd=vfe&ved=0CAwQjRxqFwoTCJCjva6YofcCFQAAAAAdAAAAABAI" alt="drawing" width="200"/>
-
+<img src="https://miro.medium.com/max/578/0*T_qnjkS2GPw7995A.png" alt="drawing" width="200"/>
+<p>
 
 # Installation
 You need:

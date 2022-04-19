@@ -5,7 +5,11 @@
 </p>
 
 # Objective
+This project aims to create an environment for publishing and disseminating mods/addons
 # Database
+# technology
+![image](https://user-images.githubusercontent.com/87670341/164112507-77a7cf54-7224-447b-a0d3-838d742c9a85.png)
+
 # Installation
 You need:
 * Node ```https://nodejs.org/en/```

@@ -8,7 +8,7 @@
 This project aims to create an environment for publishing and disseminating mods/addons
 # Database
 # technology
-![image](https://user-images.githubusercontent.com/87670341/164112507-77a7cf54-7224-447b-a0d3-838d742c9a85.png)
+<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Node.js_logo.svg/1200px-Node.js_logo.svg.png" alt="drawing" width="200"/>
 
 # Installation
 You need:

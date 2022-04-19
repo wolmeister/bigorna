@@ -18,7 +18,7 @@ import {
   UpdateGameParamsSchema,
   UpdateGameSchema,
 } from './game.schemas';
-// import { UserService } from './user.services';
+import { GameService } from './game.services';
 
 export const gameRoutes: FastifyPluginAsync = async server => {
   server.get<{ Querystring: FindGamesQuery; Reply: FindGamesResponse }>(
@@ -34,8 +34,8 @@ export const gameRoutes: FastifyPluginAsync = async server => {
       },
     },
     async (request, reply) => {
-      // const users = await UserService.findUsers(request.query);
-      // return reply.status(200).send(users);
+      const games = await GameService.findGames(request.query);
+      return reply.status(200).send(games);
     }
   );
 
@@ -52,8 +52,8 @@ export const gameRoutes: FastifyPluginAsync = async server => {
       },
     },
     async (request, reply) => {
-      // const user = await UserService.findUserById(request.params.id);
-      // return reply.status(200).send(user);
+      const game = await GameService.findGameById(request.params.id);
+      return reply.status(200).send(game);
     }
   );
 
@@ -70,8 +70,8 @@ export const gameRoutes: FastifyPluginAsync = async server => {
       },
     },
     async (request, reply) => {
-      // const user = await UserService.createUser(request.body);
-      // return reply.status(201).send(user);
+      const game = await GameService.createGame(request.body);
+      return reply.status(201).send(game);
     }
   );
 
@@ -89,8 +89,8 @@ export const gameRoutes: FastifyPluginAsync = async server => {
       },
     },
     async (request, reply) => {
-      // const user = await UserService.updateUser(request.params.id, request.body);
-      // return reply.status(200).send(user);
+      const game = await GameService.updateGame(request.params.id, request.body);
+      return reply.status(200).send(game);
     }
   );
 
@@ -107,8 +107,8 @@ export const gameRoutes: FastifyPluginAsync = async server => {
       },
     },
     async (request, reply) => {
-      // const user = await UserService.updateUserRole(request.params.id, request.body);
-      // return reply.status(200).send(user);
+      const game = await GameService.deleteGame(request.params.id);
+      return reply.status(200).send(game);
     }
   );
 };

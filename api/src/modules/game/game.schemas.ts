@@ -1,13 +1,13 @@
 import { Static, Type } from '@sinclair/typebox';
 
-import { DateType } from '../../common/typebox-types';
+import { DateType, FileType } from '../../common/typebox-types';
 
 // Common
 export const GameResponseSchema = Type.Object({
   id: Type.String(),
   name: Type.String(),
-  posterUrl: Type.String({ format: 'uri' }),
-  posterBlurhash: Type.String(),
+  posterUrl: Type.Optional(Type.String({ format: 'uri' })),
+  posterBlurhash: Type.Optional(Type.String()),
   updatedAt: DateType(),
   createdAt: DateType(),
 });
@@ -50,7 +50,7 @@ export type FindGameParams = Static<typeof FindGameParamsSchema>;
 // Create Game
 export const CreateGameSchema = Type.Object({
   name: Type.String(),
-  // @TODO: Add poster
+  poster: FileType(),
 });
 
 export type CreateGame = Static<typeof CreateGameSchema>;
@@ -58,7 +58,7 @@ export type CreateGame = Static<typeof CreateGameSchema>;
 // Update Game
 export const UpdateGameSchema = Type.Object({
   name: Type.String(),
-  // @TODO: Add poster
+  poster: FileType(),
 });
 
 export type UpdateGame = Static<typeof UpdateGameSchema>;

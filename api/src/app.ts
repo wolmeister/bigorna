@@ -1,15 +1,18 @@
 import fastify from 'fastify';
-import fileUpload from 'fastify-file-upload';
+import multipart from 'fastify-multipart';
 import swagger from 'fastify-swagger';
 
 import { authRoutes } from './modules/auth';
 import { gameRoutes } from './modules/game';
 import { userRoutes } from './modules/user';
+import { schemaValidatorCompiler } from './schema-validator-compiler';
 
 const app = fastify();
 
-app.register(fileUpload);
-
+app.setValidatorCompiler(schemaValidatorCompiler);
+app.register(multipart, {
+  addToBody: true,
+});
 app.register(swagger, {
   openapi: {
     info: {

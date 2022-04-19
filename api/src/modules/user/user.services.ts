@@ -18,13 +18,17 @@ interface UserService {
 class UserServiceImpl implements UserService {
   findUsers(query: FindUsersQuery): Promise<Connection<User, Edge<User>>> {
     return findManyCursorConnection(
-      args => prisma.user.findMany(args),
-      () => prisma.user.count(),
+      args => {
+        return prisma.user.findMany(args);
+      },
+      () => {
+        return prisma.user.count();
+      },
       query
     );
   }
 
-  async findUserById(id: string): Promise<User> {
+  async findUserById(id: User['id']): Promise<User> {
     try {
       return await prisma.user.findUnique({ where: { id }, rejectOnNotFound: true });
     } catch (error) {
@@ -32,7 +36,7 @@ class UserServiceImpl implements UserService {
     }
   }
 
-  async findUserByEmail(email: string): Promise<User> {
+  async findUserByEmail(email: User['email']): Promise<User> {
     try {
       return await prisma.user.findUnique({ where: { email }, rejectOnNotFound: true });
     } catch (error) {

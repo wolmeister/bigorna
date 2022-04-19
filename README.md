@@ -18,7 +18,7 @@ This project aims to create an environment for publishing and disseminating mods
 # Installation
 You need:
 * Node ```https://nodejs.org/en/```
-* pnpm ```if you have npm run: npm install -g pnpm```
+* pnpm ```if you have npm, run: npm install -g pnpm```
 
 clone this repository
 ```bash

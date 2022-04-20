@@ -9,7 +9,6 @@ export const UserResponseSchema = Type.Object({
   username: Type.String(),
   email: Type.String({ format: 'email' }),
   role: Type.Enum(Role),
-  avatarId: Type.Union([Type.Null(), Type.String()]),
   avatarBlurhash: Type.Union([Type.Null(), Type.String()]),
   updatedAt: DateType(),
   createdAt: DateType(),

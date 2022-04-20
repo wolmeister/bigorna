@@ -5,6 +5,8 @@ import {
   CreateGameSchema,
   DeleteGameParams,
   DeleteGameParamsSchema,
+  DeleteGameResponse,
+  DeleteGameResponseSchema,
   FindGameParams,
   FindGameParamsSchema,
   FindGamesQuery,
@@ -62,6 +64,7 @@ export const gameRoutes: FastifyPluginAsync = async server => {
     {
       schema: {
         tags: ['Games'],
+        consumes: ['multipart/form-data'],
         body: CreateGameSchema,
         response: {
           201: GameResponseSchema,
@@ -80,6 +83,7 @@ export const gameRoutes: FastifyPluginAsync = async server => {
     {
       schema: {
         tags: ['Games'],
+        consumes: ['multipart/form-data'],
         body: UpdateGameSchema,
         params: UpdateGameParamsSchema,
         response: {
@@ -94,14 +98,14 @@ export const gameRoutes: FastifyPluginAsync = async server => {
     }
   );
 
-  server.delete<{ Reply: GameResponse; Params: DeleteGameParams }>(
+  server.delete<{ Reply: DeleteGameResponse; Params: DeleteGameParams }>(
     '/games/:id',
     {
       schema: {
         tags: ['Games'],
         params: DeleteGameParamsSchema,
         response: {
-          200: GameResponseSchema,
+          200: DeleteGameResponseSchema,
           // @TODO: Add errors to validations
         },
       },

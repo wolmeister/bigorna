@@ -8,41 +8,44 @@ type IsFileTypeKeywordParent = {
   isFileType?: boolean;
 };
 
-const ajv = new Ajv({
-  removeAdditional: true,
-  useDefaults: true,
-  coerceTypes: true,
-  nullable: true,
-});
-ajvKeywords(ajv, 'instanceof');
+const createAjvInstance = () => {
+  const ajv = new Ajv({
+    removeAdditional: true,
+    useDefaults: true,
+    coerceTypes: true,
+    nullable: true,
+  });
+  ajvKeywords(ajv, 'instanceof');
 
-const fileSchemaValidation = ajv.compile({
-  type: 'array',
-  items: {
-    additionalProperties: false,
-    type: 'object',
-    properties: {
-      data: { instanceof: 'Buffer' },
-      filename: { type: 'string' },
-      encoding: { type: 'string' },
-      mimetype: { type: 'string' },
+  const fileSchemaValidation = ajv.compile({
+    type: 'array',
+    items: {
+      additionalProperties: false,
+      type: 'object',
+      properties: {
+        data: { instanceof: 'Buffer' },
+        filename: { type: 'string' },
+        encoding: { type: 'string' },
+        mimetype: { type: 'string' },
+      },
+      required: ['data', 'filename', 'mimetype'],
     },
-    required: ['data', 'filename', 'mimetype'],
-  },
-});
+  });
 
-ajv.addKeyword('isFileType', {
-  compile: (_, parent) => {
-    // Change the schema type, as this is post validation it doesn't appear to error.
-    (parent as IsFileTypeKeywordParent).type = 'file';
-    delete (parent as IsFileTypeKeywordParent).isFileType;
+  ajv.addKeyword('isFileType', {
+    compile: (_, parent) => {
+      // Change the schema type, as this is post validation it doesn't appear to error.
+      (parent as IsFileTypeKeywordParent).type = 'file';
+      delete (parent as IsFileTypeKeywordParent).isFileType;
 
-    return data => {
-      return fileSchemaValidation(data);
-    };
-  },
-});
+      return data => fileSchemaValidation(data);
+    },
+  });
 
+  return ajv;
+};
+
+// eslint-disable-next-line arrow-body-style
 export const schemaValidatorCompiler: FastifySchemaCompiler<FastifySchema> = ({ schema }) => {
-  return ajv.compile(schema);
+  return createAjvInstance().compile(schema);
 };

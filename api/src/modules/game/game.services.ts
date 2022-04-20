@@ -1,55 +1,93 @@
 import { Connection, Edge, findManyCursorConnection } from '@devoxa/prisma-relay-cursor-connection';
 import { Game } from '@prisma/client';
 
+import { UploadedFile } from '../../common/uploaded-file';
+import { minioClient } from '../../minio';
 import { prisma } from '../../prisma';
 import {
   formatCreateUpdatGameError,
   formatDeleteGameError,
   formatFindGameError,
+  InvalidGamePosterError,
 } from './game.errors';
 import { CreateGame, FindGamesQuery, UpdateGame } from './game.schemas';
 
+type GameWithUrl = Game & {
+  posterUrl: string | null;
+};
+
 interface GameService {
-  findGames(query: FindGamesQuery): Promise<Connection<Game>>;
-  findGameById(id: Game['id']): Promise<Game>;
-  createGame(data: CreateGame): Promise<Game>;
-  updateGame(id: Game['id'], data: UpdateGame): Promise<Game>;
+  findGames(query: FindGamesQuery): Promise<Connection<GameWithUrl>>;
+  findGameById(id: Game['id']): Promise<GameWithUrl>;
+  createGame(data: CreateGame): Promise<GameWithUrl>;
+  updateGame(id: Game['id'], data: UpdateGame): Promise<GameWithUrl>;
   deleteGame(id: Game['id']): Promise<Game>;
 }
 
 class GameServiceImpl implements GameService {
-  findGames(query: FindGamesQuery): Promise<Connection<Game, Edge<Game>>> {
+  private readonly MINIO_BUCKET = 'games';
+
+  findGames(query: FindGamesQuery): Promise<Connection<Game, Edge<GameWithUrl>>> {
     return findManyCursorConnection(
-      args => prisma.game.findMany(args),
+      args => prisma.game.findMany(args).then(games => this.convertAllToGameWithUrl(games)),
       () => prisma.game.count(),
       query
     );
   }
 
-  async findGameById(id: Game['id']): Promise<Game> {
+  async findGameById(id: Game['id']): Promise<GameWithUrl> {
     try {
-      return await prisma.game.findUnique({ where: { id }, rejectOnNotFound: true });
+      const game = await prisma.game.findUnique({ where: { id }, rejectOnNotFound: true });
+      return this.convertToGameWithUrl(game);
     } catch (error) {
       throw formatFindGameError(error);
     }
   }
 
-  async createGame(data: CreateGame): Promise<Game> {
+  async createGame(rawData: CreateGame): Promise<GameWithUrl> {
+    const [poster] = rawData.poster;
+    this.validatePoster(poster);
+
     try {
-      return await prisma.game.create({ data });
+      const data = {
+        name: rawData.name,
+        posterBlurhash: '', // @TODO: Create blurhash
+      };
+      // First add to database to valid constraints
+      const game = await prisma.game.create({ data });
+      // Then upload the image to minio
+      await minioClient.putObject(this.MINIO_BUCKET, game.id, poster.data, {
+        'Content-Type': poster.mimetype,
+      });
+
+      return this.convertToGameWithUrl(game);
     } catch (error) {
       throw formatCreateUpdatGameError(error);
     }
   }
 
-  async updateGame(id: Game['id'], data: UpdateGame): Promise<Game> {
+  async updateGame(id: Game['id'], rawData: UpdateGame): Promise<GameWithUrl> {
+    const [poster] = rawData.poster;
+    this.validatePoster(poster);
+
     try {
-      return await prisma.game.update({
+      const data = {
+        name: rawData.name,
+        posterBlurhash: '', // @TODO: Create blurhash
+      };
+      // First update the database to valid constraints
+      const game = await prisma.game.update({
         where: {
           id,
         },
         data,
       });
+      // Then upload the image to minio
+      await minioClient.putObject(this.MINIO_BUCKET, game.id, poster.data, {
+        'Content-Type': poster.mimetype,
+      });
+
+      return this.convertToGameWithUrl(game);
     } catch (error) {
       throw formatCreateUpdatGameError(error);
     }
@@ -57,14 +95,35 @@ class GameServiceImpl implements GameService {
 
   async deleteGame(id: Game['id']): Promise<Game> {
     try {
-      return await prisma.game.delete({
+      const game = await prisma.game.delete({
         where: {
           id,
         },
       });
+      await minioClient.removeObject(this.MINIO_BUCKET, id);
+      return game;
     } catch (error) {
       throw formatDeleteGameError(error);
     }
+  }
+
+  private validatePoster(poster: UploadedFile) {
+    if (!poster.mimetype.startsWith('image/')) {
+      throw new InvalidGamePosterError();
+    }
+  }
+
+  private async convertAllToGameWithUrl(games: Game[]): Promise<GameWithUrl[]> {
+    return Promise.all(games.map(game => this.convertToGameWithUrl(game)));
+  }
+
+  private async convertToGameWithUrl(game: Game): Promise<GameWithUrl> {
+    const posterUrl = await minioClient.presignedGetObject(this.MINIO_BUCKET, game.id);
+
+    return {
+      ...game,
+      posterUrl,
+    };
   }
 }
 

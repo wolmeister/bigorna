@@ -6,8 +6,8 @@ import { DateType, FileType } from '../../common/typebox-types';
 export const GameResponseSchema = Type.Object({
   id: Type.String(),
   name: Type.String(),
-  posterUrl: Type.Optional(Type.String({ format: 'uri' })),
-  posterBlurhash: Type.Optional(Type.String()),
+  posterUrl: Type.Union([Type.Null(), Type.String({ format: 'uri' })]),
+  posterBlurhash: Type.Union([Type.Null(), Type.String()]),
   updatedAt: DateType(),
   createdAt: DateType(),
 });
@@ -75,3 +75,10 @@ export const DeleteGameParamsSchema = Type.Object({
 });
 
 export type DeleteGameParams = Static<typeof DeleteGameParamsSchema>;
+
+export const DeleteGameResponseSchema = Type.Object({
+  id: Type.String(),
+  name: Type.String(),
+});
+
+export type DeleteGameResponse = Static<typeof DeleteGameResponseSchema>;

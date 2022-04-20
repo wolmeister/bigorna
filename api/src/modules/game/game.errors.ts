@@ -6,6 +6,11 @@ import { logger } from '../../logger';
 const UnexpectedGameError = createError('UNEXPECTED_GAME_ERROR', 'Unexpected game error', 500);
 const GameNotFoundError = createError('GAME_NOT_FOUND', 'Game not found', 404);
 const GameNameNotUniqueError = createError('GAME_NAME_NOT_UNIQUE', 'Game name is not unique', 400);
+export const InvalidGamePosterError = createError(
+  'INVALID_GAME_POSTER',
+  'Game poster is not valid',
+  400
+);
 
 export function formatFindGameError(error: unknown): FastifyError {
   if (error instanceof Error) {
@@ -28,7 +33,7 @@ export function formatCreateUpdatGameError(error: unknown): FastifyError {
     if (error.code === 'P2002') {
       const meta = error.meta as { target?: string[] };
 
-      if (meta.target?.includes('username')) {
+      if (meta.target?.includes('name')) {
         return new GameNameNotUniqueError();
       }
     }

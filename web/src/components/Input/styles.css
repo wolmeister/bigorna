@@ -1,0 +1,8 @@
+input {
+  margin-left: 10px;
+  border-width: 0px;
+  padding: 2% 10%;
+  border-radius: 15px;
+  border-color: #000000;
+  background-image: linear-gradient(to right, #a3f4ff, 70%, rgb(255, 255, 255));
+}

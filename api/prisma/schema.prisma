@@ -18,7 +18,6 @@ model User {
   email          String   @unique
   password       String
   role           Role     @default(USER)
-  avatarId       String?
   avatarBlurhash String?
   // Relations
   addons         Addon[]
@@ -30,7 +29,6 @@ model User {
 model Game {
   id             String         @id @default(cuid())
   name           String         @unique
-  posterId       String
   posterBlurhash String
   // Relations
   gameCategories GameCategory[]
@@ -43,7 +41,6 @@ model Game {
 model GameCategory {
   id           String   @id @default(cuid())
   name         String
-  iconId       String
   iconBlurhash String
   // Relations
   gameId       String

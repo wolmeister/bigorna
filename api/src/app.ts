@@ -1,10 +1,18 @@
 import fastify from 'fastify';
+import multipart from 'fastify-multipart';
 import swagger from 'fastify-swagger';
 
+import { authRoutes } from './modules/auth';
+import { gameRoutes } from './modules/game';
 import { userRoutes } from './modules/user';
+import { schemaValidatorCompiler } from './schema-validator-compiler';
 
 const app = fastify();
 
+app.setValidatorCompiler(schemaValidatorCompiler);
+app.register(multipart, {
+  addToBody: true,
+});
 app.register(swagger, {
   openapi: {
     info: {
@@ -25,12 +33,18 @@ app.register(swagger, {
         bearerAuth: [],
       },
     ],
-    tags: [{ name: 'Users', description: 'User related end-points' }],
+    tags: [
+      { name: 'Auth', description: 'Auth related end-points' },
+      { name: 'Games', description: 'Game related end-points' },
+      { name: 'Users', description: 'User related end-points' },
+    ],
   },
   routePrefix: '/docs',
   exposeRoute: true,
 });
 
 app.register(userRoutes);
+app.register(authRoutes);
+app.register(gameRoutes);
 
 export { app };

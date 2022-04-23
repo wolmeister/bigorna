@@ -17,7 +17,7 @@ type GameWithUrl = Game & {
 };
 
 interface GameService {
-  findGames(query: FindGamesQuery): Promise<Connection<GameWithUrl>>;
+  findGames(query: FindGamesQuery): Promise<Connection<GameWithUrl, Edge<GameWithUrl>>>;
   findGameById(id: Game['id']): Promise<GameWithUrl>;
   createGame(data: CreateGame): Promise<GameWithUrl>;
   updateGame(id: Game['id'], data: UpdateGame): Promise<GameWithUrl>;
@@ -27,7 +27,7 @@ interface GameService {
 class GameServiceImpl implements GameService {
   private readonly MINIO_BUCKET = 'games';
 
-  findGames(query: FindGamesQuery): Promise<Connection<Game, Edge<GameWithUrl>>> {
+  findGames(query: FindGamesQuery): Promise<Connection<GameWithUrl, Edge<GameWithUrl>>> {
     return findManyCursorConnection(
       args => prisma.game.findMany(args).then(games => this.convertAllToGameWithUrl(games)),
       () => prisma.game.count(),

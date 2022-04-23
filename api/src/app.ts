@@ -4,6 +4,7 @@ import swagger from 'fastify-swagger';
 
 import { authRoutes } from './modules/auth';
 import { gameRoutes } from './modules/game';
+import { gameCategoryRoutes } from './modules/game-category';
 import { userRoutes } from './modules/user';
 import { schemaValidatorCompiler } from './schema-validator-compiler';
 
@@ -35,6 +36,7 @@ app.register(swagger, {
     ],
     tags: [
       { name: 'Auth', description: 'Auth related end-points' },
+      { name: 'Game Categories', description: 'Game Categories related end-points' },
       { name: 'Games', description: 'Game related end-points' },
       { name: 'Users', description: 'User related end-points' },
     ],
@@ -46,5 +48,6 @@ app.register(swagger, {
 app.register(userRoutes);
 app.register(authRoutes);
 app.register(gameRoutes);
+app.register(gameCategoryRoutes);
 
 export { app };

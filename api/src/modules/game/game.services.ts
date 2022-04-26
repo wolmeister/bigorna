@@ -5,7 +5,7 @@ import { UploadedFile } from '../../common/uploaded-file';
 import { minioClient } from '../../minio';
 import { prisma } from '../../prisma';
 import {
-  formatCreateUpdatGameError,
+  formatCreateUpdateGameError,
   formatDeleteGameError,
   formatFindGameError,
   InvalidGamePosterError,
@@ -62,7 +62,7 @@ class GameServiceImpl implements GameService {
 
       return this.convertToGameWithUrl(game);
     } catch (error) {
-      throw formatCreateUpdatGameError(error);
+      throw formatCreateUpdateGameError(error);
     }
   }
 
@@ -89,7 +89,7 @@ class GameServiceImpl implements GameService {
 
       return this.convertToGameWithUrl(game);
     } catch (error) {
-      throw formatCreateUpdatGameError(error);
+      throw formatCreateUpdateGameError(error);
     }
   }
 

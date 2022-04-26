@@ -23,7 +23,7 @@ export function formatFindGameError(error: unknown): FastifyError {
   return new UnexpectedGameError();
 }
 
-export function formatCreateUpdatGameError(error: unknown): FastifyError {
+export function formatCreateUpdateGameError(error: unknown): FastifyError {
   if (error instanceof PrismaClientKnownRequestError) {
     // No game found in update
     if (error.code === 'P2025') {

@@ -5,3 +5,6 @@ export const AuthWrongPasswordError = createError(
   'Wrong user password',
   400
 );
+
+export const NotAuthenticatedError = createError('NOT_AUTHENTICATED', 'Not authenticated', 403);
+export const UnauthorizedError = createError('NOT_UNAUTHORIZED', 'Not authorized', 401);

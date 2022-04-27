@@ -2,6 +2,7 @@ import fastify from 'fastify';
 import multipart from 'fastify-multipart';
 import swagger from 'fastify-swagger';
 
+import { addonRoutes } from './modules/addon';
 import { authRoutes } from './modules/auth';
 import { gameRoutes } from './modules/game';
 import { gameCategoryRoutes } from './modules/game-category';
@@ -36,7 +37,8 @@ app.register(swagger, {
     ],
     tags: [
       { name: 'Auth', description: 'Auth related end-points' },
-      { name: 'Game Categories', description: 'Game Categories related end-points' },
+      { name: 'Addons', description: 'Addon related end-points' },
+      { name: 'Game Categories', description: 'Game Category related end-points' },
       { name: 'Games', description: 'Game related end-points' },
       { name: 'Users', description: 'User related end-points' },
     ],
@@ -49,5 +51,6 @@ app.register(userRoutes);
 app.register(authRoutes);
 app.register(gameRoutes);
 app.register(gameCategoryRoutes);
+app.register(addonRoutes);
 
 export { app };

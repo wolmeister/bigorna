@@ -1,12 +1,9 @@
-import { FastifyRequest } from 'fastify';
-import createError from 'fastify-error';
+import { FastifyReply, FastifyRequest } from 'fastify';
 
+import { NotAuthenticatedError, UnauthorizedError } from './auth.errors';
 import { verifyJwt } from './jwt';
 
-const NotAuthenticatedError = createError('NOT_AUTHENTICATED', 'Not authenticated', 403);
-const UnauthorizedError = createError('NOT_UNAUTHORIZED', 'Not authorized', 401);
-
-export async function isAuthenticated(request: FastifyRequest): Promise<void> {
+export async function isAuthenticated(request: FastifyRequest, reply: FastifyReply): Promise<void> {
   const { authorization } = request.headers;
 
   if (!authorization) {
@@ -14,8 +11,9 @@ export async function isAuthenticated(request: FastifyRequest): Promise<void> {
   }
 
   try {
-    // @TODO: Set the jwt to the reply instance
-    verifyJwt(authorization);
+    const payload = verifyJwt(authorization.substring('Bearer '.length));
+    // eslint-disable-next-line no-param-reassign
+    reply.userId = payload.id;
   } catch {
     throw new UnauthorizedError();
   }

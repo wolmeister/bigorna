@@ -20,3 +20,13 @@ export interface TFileType extends TSchema {
 export function FileType(): TFileType {
   return { isFileType: true } as never;
 }
+
+export interface TBigIntType extends TSchema {
+  $static: bigint;
+  type: 'integer';
+  format: 'int64';
+}
+
+export function BigIntType(): TBigIntType {
+  return { type: 'integer', format: 'format' } as never;
+}

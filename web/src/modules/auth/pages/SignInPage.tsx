@@ -1,13 +1,36 @@
 import { useState } from 'react';
-import { Form, Input, Button, Checkbox, Row, Layout, Menu } from 'antd';
+import { Form, Input, Button, Checkbox, Layout, Menu, Alert, Col } from 'antd';
 import './styles.css';
 import { Content, Header } from 'antd/lib/layout/layout';
 import { useNavigate } from 'react-router-dom';
+import { userService } from './userService';
+
+import { notification } from 'antd';
+import { WarningOutlined } from '@ant-design/icons';
 
 export function SignInPage() {
   const navigate = useNavigate();
+  const [isFail, setisFail] = useState(false);
 
-  const onFinish = (values: any) => {
+  const openNotification = (placement: any) => {
+    notification.info({
+      message: 'Wrong username or password',
+      description: '',
+      placement,
+      duration: 2,
+      icon: <WarningOutlined style={{ color: 'red' }} />,
+    });
+  };
+
+  const onFinish = async (values: any) => {
+    try {
+      const userInfos = await new userService().login(values.username, values.password);
+      console.log('Sucesso');
+      navigate('/');
+    } catch (error) {
+      //setisFail(true); // error mensage disable
+      openNotification('bottomRight');
+    }
     console.log('Success:', values);
   };
 
@@ -26,10 +49,26 @@ export function SignInPage() {
   return (
     <Layout style={{ height: '100%' }}>
       <Header style={{ position: 'fixed', zIndex: 1, width: '100%' }}>
-        <div className="logo" />
+        <div className="logo">
+          <a href="/">
+            <img width={40} src="/favicon.png" />
+          </a>
+        </div>
         <Menu theme="dark" mode="horizontal"></Menu>
       </Header>
       <Content className="site-layout" style={{ padding: '0 0px', marginTop: 200 }}>
+        {isFail ? (
+          <Col span={8} offset={8}>
+            <Alert
+              style={{ marginBottom: 16 }}
+              message="Wrong username or password"
+              type="error"
+              showIcon
+            />
+          </Col>
+        ) : (
+          ''
+        )}
         <Form
           className="login_form"
           name="login_form"
@@ -41,9 +80,12 @@ export function SignInPage() {
           autoComplete="off"
         >
           <Form.Item
-            label="Username"
+            label="Email"
             name="username"
-            rules={[{ required: true, message: 'Please input your username!' }]}
+            rules={[
+              { required: true, message: 'Please input your email!' },
+              { type: 'email', message: 'Please input a valid email!' },
+            ]}
           >
             <Input />
           </Form.Item>

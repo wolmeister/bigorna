@@ -7,6 +7,11 @@
 # Objective
 This project aims to create an environment for publishing and disseminating mods/addons
 # Database
+Diagram:
+<p align="center">
+  <img src="https://raw.githubusercontent.com/wolmeister/bigorna/main/api/diagram.png" width="600" />
+</p>
+
 # Technologies
 <p>
 <img src="https://blog.4linux.com.br/wp-content/uploads/2019/12/node-js-1900x950_c.png" alt="drawing" width="200"/>

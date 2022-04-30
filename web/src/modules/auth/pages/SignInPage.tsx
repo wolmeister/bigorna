@@ -1,16 +1,19 @@
 import { useState } from 'react';
-import { Form, Input, Button, Checkbox, Layout, Menu, Alert, Col } from 'antd';
+import { Form, Input, Button, Checkbox, Layout, Menu, Alert, Col, Spin } from 'antd';
 import './styles.css';
 import { Content, Header } from 'antd/lib/layout/layout';
 import { useNavigate } from 'react-router-dom';
 import { userService } from './userService';
 
 import { notification } from 'antd';
-import { WarningOutlined } from '@ant-design/icons';
+import { LoadingOutlined, WarningOutlined } from '@ant-design/icons';
+
+const antIcon = <LoadingOutlined style={{ fontSize: 25 }} spin />;
 
 export function SignInPage() {
   const navigate = useNavigate();
   const [isFail, setisFail] = useState(false);
+  const [isOnRequest, setisOnRequest] = useState(false);
 
   const openNotification = (placement: any) => {
     notification.info({
@@ -23,14 +26,16 @@ export function SignInPage() {
   };
 
   const onFinish = async (values: any) => {
+    setisOnRequest(true);
     try {
-      const userInfos = await new userService().login(values.username, values.password);
-      console.log('Sucesso');
+      const userInfos = await new userService().login(values.email, values.password);
+      console.log(userInfos);
       navigate('/');
     } catch (error) {
       //setisFail(true); // error mensage disable
       openNotification('bottomRight');
     }
+    setisOnRequest(false);
     console.log('Success:', values);
   };
 
@@ -81,13 +86,13 @@ export function SignInPage() {
         >
           <Form.Item
             label="Email"
-            name="username"
+            name="email"
             rules={[
               { required: true, message: 'Please input your email!' },
               { type: 'email', message: 'Please input a valid email!' },
             ]}
           >
-            <Input />
+            <Input disabled={isOnRequest} />
           </Form.Item>
 
           <Form.Item
@@ -95,7 +100,7 @@ export function SignInPage() {
             name="password"
             rules={[{ required: true, message: 'Please input your password!' }]}
           >
-            <Input.Password />
+            <Input.Password disabled={isOnRequest} />
           </Form.Item>
 
           <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
@@ -106,12 +111,13 @@ export function SignInPage() {
           </Form.Item>
 
           <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-            <Button type="primary" htmlType="submit">
+            <Button type="primary" htmlType="submit" disabled={isOnRequest}>
               Login
             </Button>
             <Button type="link" onClick={onRegister}>
               Sign Up
             </Button>
+            {isOnRequest ? <Spin style={{ marginLeft: 5 }} indicator={antIcon} /> : ''}
           </Form.Item>
         </Form>
       </Content>

@@ -79,9 +79,8 @@ model Addon {
 
 model AddonVersion {
   id          String   @id @default(cuid())
-  version     String
+  version     String   @unique
   gameVersion String
-  fileId      String
   changelog   String
   downloads   BigInt
   // Relations

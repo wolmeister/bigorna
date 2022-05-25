@@ -48,4 +48,18 @@ export const config = convict({
       env: 'MINIO_SECRET_KEY',
     },
   },
+  email: {
+    key: {
+      doc: 'KEY',
+      format: NonEmptySafeStringFormatter,
+      default: '',
+      env: 'MAILJET_API_KEY',
+    },
+    secret: {
+      doc: 'SECRET',
+      format: NonEmptySafeStringFormatter,
+      default: '',
+      env: 'MAILJET_API_SECRET',
+    },
+  },
 }).validate({ allowed: 'strict' });

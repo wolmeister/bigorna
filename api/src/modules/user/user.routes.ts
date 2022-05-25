@@ -9,6 +9,10 @@ import {
   FindUsersQuerySchema,
   FindUsersResponse,
   FindUsersResponseSchema,
+  PasswordRecovery,
+  PasswordRecoveryR,
+  PasswordRecoveryResponse,
+  PasswordRecoverySchema,
   UpdateUser,
   UpdateUserParams,
   UpdateUserParamsSchema,
@@ -112,6 +116,24 @@ export const userRoutes: FastifyPluginAsync = async server => {
     async (request, reply) => {
       const user = await UserService.updateUserRole(request.params.id, request.body);
       return reply.status(200).send(user);
+    }
+  );
+
+  server.post<{ Body: PasswordRecovery; Reply: PasswordRecoveryResponse }>(
+    '/users/passwordRecovery',
+    {
+      schema: {
+        tags: ['Users'],
+        body: PasswordRecoverySchema,
+        response: {
+          200: PasswordRecoveryR,
+          // @TODO: Add errors to validations
+        },
+      },
+    },
+    async (request, reply) => {
+      const response = await UserService.recoveryPassword(request.body.email);
+      return reply.status(200).send();
     }
   );
 };

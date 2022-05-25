@@ -85,3 +85,15 @@ export const UpdateUserRoleParamsSchema = Type.Object({
 });
 
 export type UpdateUserRoleParams = Static<typeof UpdateUserRoleParamsSchema>;
+
+export const PasswordRecoverySchema = Type.Object({
+  email: Type.String({ format: 'email' }),
+});
+
+export type PasswordRecovery = Static<typeof PasswordRecoverySchema>;
+
+export const PasswordRecoveryR = Type.Object({
+  status: Type.String(),
+});
+
+export type PasswordRecoveryResponse = Static<typeof PasswordRecoveryR>;

@@ -7,7 +7,13 @@ import { connect } from 'node-mailjet';
 import { config } from '../../config';
 import { prisma } from '../../prisma';
 import { formatCreateUpdateUserError, formatFindUserError } from './user.errors';
-import { CreateUser, FindUsersQuery, UpdateUser, UpdateUserRole } from './user.schemas';
+import {
+  CreateUser,
+  FindUsersQuery,
+  PasswordRecoveryResponse,
+  UpdateUser,
+  UpdateUserRole,
+} from './user.schemas';
 
 interface UserService {
   findUsers(query: FindUsersQuery): Promise<Connection<User>>;
@@ -16,7 +22,7 @@ interface UserService {
   createUser(data: CreateUser): Promise<User>;
   updateUser(id: User['id'], data: UpdateUser): Promise<User>;
   updateUserRole(id: User['id'], data: UpdateUserRole): Promise<User>;
-  recoveryPassword(email: User['email']): void;
+  recoveryPassword(email: User['email']): Promise<PasswordRecoveryResponse>;
 }
 
 class UserServiceImpl implements UserService {
@@ -86,51 +92,65 @@ class UserServiceImpl implements UserService {
     }
   }
 
-  async recoveryPassword(email: User['email']) {
-    try {
-      const key = config.get('email.key');
-      const secret = config.get('email.secret');
-      const newPassword = cuid();
-      const mailjet = connect(key, secret);
-
-      const request = mailjet.post('send', { version: 'v3.1' }).request({
-        Messages: [
-          {
-            From: {
-              Email: 'lucas.assis@universo.univates.br',
-              Name: 'From',
-            },
-            To: [
-              {
-                Email: email.toString,
-                Name: 'To',
-              },
-            ],
-            Subject: 'Email de recuperacao de senha',
-            TextPart: '',
-            HTMLPart: `<h3>Uma nova senha foi gerada para voce :<b>${newPassword}</b></h3><br />May the delivery force be with you!`,
-          },
-        ],
-      });
-      request
-        .then(result => {
-          console.log(result.body);
-        })
-        .catch(err => {
-          console.log(err.statusCode);
-        });
-
-      return await prisma.user.update({
-        where: {
-          email,
-        },
-        data: {
-          password: await this.encryptPassword(newPassword),
-        },
-      });
-    } catch (error) {
-      throw formatCreateUpdateUserError(error);
+  async recoveryPassword(email: User['email']): Promise<PasswordRecoveryResponse> {
+    let status = '';
+    const key = config.get('email.key');
+    const secret = config.get('email.secret');
+    const newPassword = cuid();
+    const mailjet = connect(key, secret);
+    const isExist = prisma.user.findUnique({
+      where: {
+        email,
+      },
+    });
+    if (isExist == null) {
+      const res = <PasswordRecoveryResponse>{
+        status: 'Error: This user don`t exist!',
+      };
+      return res;
     }
+
+    await prisma.user.update({
+      where: {
+        email,
+      },
+      data: {
+        password: await this.encryptPassword(newPassword),
+      },
+    });
+
+    const request = mailjet.post('send', { version: 'v3.1' }).request({
+      Messages: [
+        {
+          From: {
+            Email: 'lucas.assis@universo.univates.br',
+            Name: 'From',
+          },
+          To: [
+            {
+              Email: email,
+              Name: 'To',
+            },
+          ],
+          Subject: 'Email de recuperacao de senha',
+          TextPart: '',
+          HTMLPart: `<h3>Uma nova senha foi gerada para voce :<b>${newPassword}</b></h3><br />May the delivery force be with you!`,
+        },
+      ],
+    });
+
+    await request
+      .then(result => {
+        status = 'OK';
+      })
+      .catch(err => {
+        status = `Error: ${err}`;
+      });
+
+    const res = <PasswordRecoveryResponse>{
+      status: status as string,
+    };
+    return res;
   }
 
   private encryptPassword(password: string): Promise<string> {

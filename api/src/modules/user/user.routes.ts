@@ -133,7 +133,7 @@ export const userRoutes: FastifyPluginAsync = async server => {
     },
     async (request, reply) => {
       const response = await UserService.recoveryPassword(request.body.email);
-      return reply.status(200).send();
+      return reply.status(200).send(response);
     }
   );
 };

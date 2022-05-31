@@ -115,10 +115,9 @@ export function SignUpPage() {
           </Form.Item>
 
           <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-            <Button type="primary" htmlType="submit" disabled={isOnRequest}>
+            <Button type="primary" htmlType="submit" loading={isOnRequest}>
               Register
             </Button>
-            {isOnRequest ? <Spin style={{ marginLeft: 5 }} indicator={antIcon} /> : ''}
           </Form.Item>
         </Form>
       </Content>

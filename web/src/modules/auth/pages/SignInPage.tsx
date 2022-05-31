@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { userService } from './userService';
 
 import { notification } from 'antd';
-import { LoadingOutlined, WarningOutlined } from '@ant-design/icons';
+import { AlignRightOutlined, LoadingOutlined, WarningOutlined } from '@ant-design/icons';
 
 const antIcon = <LoadingOutlined style={{ fontSize: 25 }} spin />;
 
@@ -103,21 +103,16 @@ export function SignInPage() {
             <Input.Password disabled={isOnRequest} />
           </Form.Item>
 
-          <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-            <Checkbox>Remember me</Checkbox>
-            <Button type="link" onClick={onForgetPassword}>
-              Forget password?
-            </Button>
-          </Form.Item>
-
-          <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-            <Button type="primary" htmlType="submit" disabled={isOnRequest}>
+          <Form.Item wrapperCol={{ offset: 8, span: 8 }}>
+            <Button type="primary" htmlType="submit" loading={isOnRequest}>
               Login
             </Button>
             <Button type="link" onClick={onRegister}>
               Sign Up
             </Button>
-            {isOnRequest ? <Spin style={{ marginLeft: 5 }} indicator={antIcon} /> : ''}
+            <Button type="link" onClick={onForgetPassword} style={{ marginLeft: 163 }}>
+              Forget password?
+            </Button>
           </Form.Item>
         </Form>
       </Content>

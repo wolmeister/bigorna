@@ -134,7 +134,10 @@ class UserServiceImpl implements UserService {
           ],
           Subject: 'Email de recuperacao de senha',
           TextPart: '',
-          HTMLPart: `<h3>Uma nova senha foi gerada para voce :<b>${newPassword}</b></h3><br />May the delivery force be with you!`,
+          HTMLPart: `<p>A new password has been generated for you:</p><br/>
+          <h3><b>${newPassword}</b></h3><br/>
+          <p>Right after accessing the account remember to change the password in the account administration panel</p><br/>
+          By: Thor do litrão`,
         },
       ],
     });

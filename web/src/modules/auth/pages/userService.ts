@@ -32,6 +32,14 @@ type LoginResponse = {
   };
 };
 
+type PasswordRecoveryData = {
+  email: string;
+};
+
+type PasswordRecoveryResponse = {
+  status: string;
+};
+
 export class userService {
   public login(email: string, password: string) {
     var url = '/api/auth';
@@ -52,7 +60,15 @@ export class userService {
     return new httpClient().post<RegisterData, RegisterResponse>(url, o);
   }
 
-  //Simulate request delay
+  public passwordRecovery(email: string) {
+    var url = '/api/users/passwordRecovery';
+    const o = {
+      email,
+    };
+    return new httpClient().post<PasswordRecoveryData, PasswordRecoveryResponse>(url, o);
+  }
+
+  //Simulate request delay, currently this is not used for anything
   public delay(ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms));
   }

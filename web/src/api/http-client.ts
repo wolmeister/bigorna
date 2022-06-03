@@ -85,15 +85,17 @@ export class HttpClientImpl implements HttpClient {
     }
 
     // Apply query params
-    const urlSearchParams = new URLSearchParams(finalUrl);
+    const urlSearchParams = new URLSearchParams();
     if (options?.query) {
       Object.entries(options.query).forEach(([key, value]) => {
         urlSearchParams.append(key, String(value));
       });
     }
 
+    finalUrl += urlSearchParams.toString();
+
     // Perform the request
-    const res = await fetch(urlSearchParams.toString(), {
+    const res = await fetch(finalUrl, {
       // @TODO: Support formdata
       headers: {
         'Content-Type': 'application/json',

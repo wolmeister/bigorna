@@ -1,11 +1,6 @@
 import { Connection, Edge } from '../common';
 import { Game } from '../game';
 
-export interface GameCategoryKeys {
-  gameId: Game['id'];
-  id: GameCategory['id'];
-}
-
 export interface GameCategory {
   id: string;
   name: string;
@@ -38,8 +33,8 @@ export interface GameCategoryService {
   findGameCategories(
     query: FindGameCategoriesQuery
   ): Promise<Connection<GameCategory, Edge<GameCategory>>>;
-  findGameCategoryById(keys: GameCategoryKeys): Promise<GameCategory>;
+  findGameCategoryById(id: GameCategory['id']): Promise<GameCategory>;
   createGameCategory(data: CreateGameCategory): Promise<GameCategory>;
-  updateGameCategory(keys: GameCategoryKeys, data: UpdateGameCategory): Promise<GameCategory>;
-  deleteGameCategory(keys: GameCategoryKeys): Promise<GameCategory>;
+  updateGameCategory(id: GameCategory['id'], data: UpdateGameCategory): Promise<GameCategory>;
+  deleteGameCategory(id: GameCategory['id']): Promise<GameCategory>;
 }

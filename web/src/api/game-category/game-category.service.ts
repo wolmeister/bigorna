@@ -4,7 +4,6 @@ import {
   CreateGameCategory,
   FindGameCategoriesQuery,
   GameCategory,
-  GameCategoryKeys,
   GameCategoryService,
   UpdateGameCategory,
 } from './game-category.types';
@@ -15,38 +14,28 @@ export class GameCategoryServiceImpl implements GameCategoryService {
   findGameCategories(
     query: FindGameCategoriesQuery
   ): Promise<Connection<GameCategory, Edge<GameCategory>>> {
-    return this.httpClient.get<Connection<GameCategory, Edge<GameCategory>>>('/games/:gameId', {
-      query: {
-        ...query,
-        gameId: undefined,
-      },
-      params: {
-        gameId: query.gameId,
-      },
+    return this.httpClient.get<Connection<GameCategory, Edge<GameCategory>>>('/game-categories', {
+      query,
     });
   }
 
-  findGameCategoryById(keys: GameCategoryKeys): Promise<GameCategory> {
-    return this.httpClient.get<GameCategory>('/games/:gameId/:id', {
-      params: keys,
+  findGameCategoryById(id: GameCategory['id']): Promise<GameCategory> {
+    return this.httpClient.get<GameCategory>('/game-categories/:id', {
+      params: { id },
     });
   }
 
   createGameCategory(data: CreateGameCategory): Promise<GameCategory> {
-    return this.httpClient.post<GameCategory, UpdateGameCategory>('/games/:gameId', data, {
-      params: {
-        gameId: data.gameId,
-      },
+    return this.httpClient.post<GameCategory, UpdateGameCategory>('/game-categories/:gameId', data);
+  }
+
+  updateGameCategory(id: GameCategory['id'], data: UpdateGameCategory): Promise<GameCategory> {
+    return this.httpClient.put<GameCategory, UpdateGameCategory>('/game-categories/:id', data, {
+      params: { id },
     });
   }
 
-  updateGameCategory(keys: GameCategoryKeys, data: UpdateGameCategory): Promise<GameCategory> {
-    return this.httpClient.put<GameCategory, UpdateGameCategory>('/games/:gameId/:id', data, {
-      params: keys,
-    });
-  }
-
-  deleteGameCategory(keys: GameCategoryKeys): Promise<GameCategory> {
-    return this.httpClient.delete<GameCategory>('/games/:gameId/:id', { params: keys });
+  deleteGameCategory(id: GameCategory['id']): Promise<GameCategory> {
+    return this.httpClient.delete<GameCategory>('/game-categories/:id', { params: { id } });
   }
 }

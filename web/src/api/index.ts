@@ -1,5 +1,7 @@
 import { AddonService } from './addon';
 import { AddonServiceImpl } from './addon/addon.service';
+import { AddonVersionService } from './addon-version';
+import { AddonVersionServiceImpl } from './addon-version/addon-version.service';
 import { AuthServiceImpl } from './auth/auth.service';
 import { AuthService } from './auth/auth.types';
 import { GameService } from './game';
@@ -16,3 +18,4 @@ export const authService: AuthService = new AuthServiceImpl(httpClient);
 export const gameService: GameService = new GameServiceImpl(httpClient);
 export const gameCategoryService: GameCategoryService = new GameCategoryServiceImpl(httpClient);
 export const addonService: AddonService = new AddonServiceImpl(httpClient);
+export const addonVersionService: AddonVersionService = new AddonVersionServiceImpl(httpClient);

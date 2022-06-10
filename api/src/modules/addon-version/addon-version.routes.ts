@@ -4,8 +4,6 @@ import {
   AddonVersionResponse,
   AddonVersionResponseSchema,
   CreateAddonVersion,
-  CreateAddonVersionParams,
-  CreateAddonVersionParamsSchema,
   CreateAddonVersionSchema,
   DeleteAddonVersionParams,
   DeleteAddonVersionParamsSchema,
@@ -13,8 +11,6 @@ import {
   DeleteAddonVersionResponseSchema,
   FindAddonVersionParams,
   FindAddonVersionParamsSchema,
-  FindAddonVersionsParams,
-  FindAddonVersionsParamsSchema,
   FindAddonVersionsQuery,
   FindAddonVersionsQuerySchema,
   FindAddonVersionsResponse,
@@ -29,15 +25,13 @@ import { AddonVersionService } from './addon-version.services';
 export const addonVersionRoutes: FastifyPluginAsync = async server => {
   server.get<{
     Querystring: FindAddonVersionsQuery;
-    Params: FindAddonVersionsParams;
     Reply: FindAddonVersionsResponse;
   }>(
-    '/addons/:addonId/versions',
+    '/addon-versions',
     {
       schema: {
         tags: ['Addon Versions'],
         querystring: FindAddonVersionsQuerySchema,
-        params: FindAddonVersionsParamsSchema,
         response: {
           200: FindAddonVersionsResponseSchema,
           // @TODO: Add errors to validations
@@ -45,16 +39,13 @@ export const addonVersionRoutes: FastifyPluginAsync = async server => {
       },
     },
     async (request, reply) => {
-      const addonVersions = await AddonVersionService.findAddonVersions({
-        ...request.params,
-        ...request.query,
-      });
+      const addonVersions = await AddonVersionService.findAddonVersions(request.query);
       return reply.status(200).send(addonVersions);
     }
   );
 
   server.get<{ Reply: AddonVersionResponse; Params: FindAddonVersionParams }>(
-    '/addons/:addonId/versions/:id',
+    '/addon-versions/:id',
     {
       schema: {
         tags: ['Addon Versions'],
@@ -66,23 +57,21 @@ export const addonVersionRoutes: FastifyPluginAsync = async server => {
       },
     },
     async (request, reply) => {
-      const addonVersion = await AddonVersionService.findAddonVersionById(request.params);
+      const addonVersion = await AddonVersionService.findAddonVersionById(request.params.id);
       return reply.status(200).send(addonVersion);
     }
   );
 
   server.post<{
     Body: CreateAddonVersion;
-    Params: CreateAddonVersionParams;
     Reply: AddonVersionResponse;
   }>(
-    '/addons/:addonId/versions',
+    '/addon-versions',
     {
       schema: {
         tags: ['Addon Versions'],
         consumes: ['multipart/form-data'],
         body: CreateAddonVersionSchema,
-        params: CreateAddonVersionParamsSchema,
         response: {
           201: AddonVersionResponseSchema,
           // @TODO: Add errors to validations
@@ -90,10 +79,7 @@ export const addonVersionRoutes: FastifyPluginAsync = async server => {
       },
     },
     async (request, reply) => {
-      const addonVersion = await AddonVersionService.createAddonVersion({
-        ...request.body,
-        ...request.params,
-      });
+      const addonVersion = await AddonVersionService.createAddonVersion(request.body);
       return reply.status(201).send(addonVersion);
     }
   );
@@ -103,7 +89,7 @@ export const addonVersionRoutes: FastifyPluginAsync = async server => {
     Params: UpdateAddonVersionParams;
     Reply: AddonVersionResponse;
   }>(
-    '/addons/:addonId/versions/:id',
+    '/addon-versions/:id',
     {
       schema: {
         tags: ['Addon Versions'],
@@ -118,7 +104,7 @@ export const addonVersionRoutes: FastifyPluginAsync = async server => {
     },
     async (request, reply) => {
       const addonVersion = await AddonVersionService.updateAddonVersion(
-        request.params,
+        request.params.id,
         request.body
       );
       return reply.status(200).send(addonVersion);
@@ -129,7 +115,7 @@ export const addonVersionRoutes: FastifyPluginAsync = async server => {
     Params: DeleteAddonVersionParams;
     Reply: DeleteAddonVersionResponse;
   }>(
-    '/addons/:addonId/versions/:id',
+    '/addon-versions/:id',
     {
       schema: {
         tags: ['Addon Versions'],
@@ -141,7 +127,7 @@ export const addonVersionRoutes: FastifyPluginAsync = async server => {
       },
     },
     async (request, reply) => {
-      const addonVersion = await AddonVersionService.deleteAddonVersion(request.params);
+      const addonVersion = await AddonVersionService.deleteAddonVersion(request.params.id);
       return reply.status(200).send(addonVersion);
     }
   );

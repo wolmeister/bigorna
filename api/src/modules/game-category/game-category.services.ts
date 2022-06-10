@@ -20,32 +20,24 @@ type GameCategoryWithUrl = GameCategory & {
   iconUrl: string;
 };
 
-type WithGameId<T> = T & {
-  gameId: string;
-};
-
-type GameCategoryKeys = WithGameId<{
-  id: GameCategory['id'];
-}>;
-
 interface GameCategoryService {
   findGameCategories(
-    query: WithGameId<FindGameCategoriesQuery>
+    query: FindGameCategoriesQuery
   ): Promise<Connection<GameCategoryWithUrl, Edge<GameCategoryWithUrl>>>;
-  findGameCategoryById(keys: GameCategoryKeys): Promise<GameCategoryWithUrl>;
-  createGameCategory(data: WithGameId<CreateGameCategory>): Promise<GameCategoryWithUrl>;
+  findGameCategoryById(id: GameCategory['id']): Promise<GameCategoryWithUrl>;
+  createGameCategory(data: CreateGameCategory): Promise<GameCategoryWithUrl>;
   updateGameCategory(
-    keys: GameCategoryKeys,
+    id: GameCategory['id'],
     data: UpdateGameCategory
   ): Promise<GameCategoryWithUrl>;
-  deleteGameCategory(keys: GameCategoryKeys): Promise<GameCategory>;
+  deleteGameCategory(id: GameCategory['id']): Promise<GameCategory>;
 }
 
 class GameCategoryServiceImpl implements GameCategoryService {
   private readonly MINIO_BUCKET = 'categories';
 
   findGameCategories(
-    query: WithGameId<FindGameCategoriesQuery>
+    query: FindGameCategoriesQuery
   ): Promise<Connection<GameCategoryWithUrl, Edge<GameCategoryWithUrl>>> {
     return findManyCursorConnection(
       args =>
@@ -57,10 +49,10 @@ class GameCategoryServiceImpl implements GameCategoryService {
     );
   }
 
-  async findGameCategoryById(keys: GameCategoryKeys): Promise<GameCategoryWithUrl> {
+  async findGameCategoryById(id: GameCategory['id']): Promise<GameCategoryWithUrl> {
     try {
-      const game = await prisma.gameCategory.findFirst({
-        where: { gameId: keys.gameId, id: keys.id },
+      const game = await prisma.gameCategory.findUnique({
+        where: { id },
         rejectOnNotFound: true,
       });
       return this.convertToGameCategoryWithUrl(game);
@@ -69,7 +61,7 @@ class GameCategoryServiceImpl implements GameCategoryService {
     }
   }
 
-  async createGameCategory(rawData: WithGameId<CreateGameCategory>): Promise<GameCategoryWithUrl> {
+  async createGameCategory(rawData: CreateGameCategory): Promise<GameCategoryWithUrl> {
     const [icon] = rawData.icon;
     this.validateIcon(icon);
 
@@ -93,7 +85,7 @@ class GameCategoryServiceImpl implements GameCategoryService {
   }
 
   async updateGameCategory(
-    keys: GameCategoryKeys,
+    id: GameCategory['id'],
     rawData: UpdateGameCategory
   ): Promise<GameCategoryWithUrl> {
     const [icon] = rawData.icon;
@@ -102,14 +94,11 @@ class GameCategoryServiceImpl implements GameCategoryService {
     try {
       const data = {
         name: rawData.name,
-        gameId: keys.gameId,
         iconBlurhash: '', // @TODO: Create blurhash
       };
       // First update the database to valid constraints
       const category = await prisma.gameCategory.update({
-        where: {
-          id: keys.id,
-        },
+        where: { id },
         data,
       });
       // Then upload the icon to minio
@@ -123,14 +112,12 @@ class GameCategoryServiceImpl implements GameCategoryService {
     }
   }
 
-  async deleteGameCategory(keys: GameCategoryKeys): Promise<GameCategory> {
+  async deleteGameCategory(id: GameCategory['id']): Promise<GameCategory> {
     try {
       const category = await prisma.gameCategory.delete({
-        where: {
-          id: keys.id,
-        },
+        where: { id },
       });
-      await minioClient.removeObject(this.MINIO_BUCKET, keys.id);
+      await minioClient.removeObject(this.MINIO_BUCKET, id);
       return category;
     } catch (error) {
       throw formatDeleteGameCategoryError(error);

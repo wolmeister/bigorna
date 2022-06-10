@@ -16,13 +16,8 @@ export const GameCategoryResponseSchema = Type.Object({
 export type GameCategoryResponse = Static<typeof GameCategoryResponseSchema>;
 
 // Find Game Categories
-export const FindGameCategoriesParamsSchema = Type.Object({
-  gameId: Type.String(),
-});
-
-export type FindGameCategoriesParams = Static<typeof FindGameCategoriesParamsSchema>;
-
 export const FindGameCategoriesQuerySchema = Type.Object({
+  gameId: Type.Optional(Type.String()),
   after: Type.Optional(Type.String()),
   first: Type.Optional(Type.Integer({ minimum: 1, maximum: 100, default: 50 })),
 });
@@ -49,20 +44,14 @@ export type FindGameCategoriesResponse = Static<typeof FindGameCategoriesRespons
 
 // Find Game Category By Id
 export const FindGameCategoryParamsSchema = Type.Object({
-  gameId: Type.String(),
   id: Type.String(),
 });
 
 export type FindGameCategoryParams = Static<typeof FindGameCategoryParamsSchema>;
 
 // Create Game Category
-export const CreateGameCategoryParamsSchema = Type.Object({
-  gameId: Type.String(),
-});
-
-export type CreateGameCategoryParams = Static<typeof CreateGameCategoryParamsSchema>;
-
 export const CreateGameCategorySchema = Type.Object({
+  gameId: Type.String(),
   name: Type.String(),
   icon: FileType(),
 });
@@ -78,7 +67,6 @@ export const UpdateGameCategorySchema = Type.Object({
 export type UpdateGameCategory = Static<typeof UpdateGameCategorySchema>;
 
 export const UpdateGameCategoryParamsSchema = Type.Object({
-  gameId: Type.String(),
   id: Type.String(),
 });
 
@@ -86,7 +74,6 @@ export type UpdateGameCategoryParams = Static<typeof UpdateGameCategoryParamsSch
 
 // Delete Game Category
 export const DeleteGameCategoryParamsSchema = Type.Object({
-  gameId: Type.String(),
   id: Type.String(),
 });
 

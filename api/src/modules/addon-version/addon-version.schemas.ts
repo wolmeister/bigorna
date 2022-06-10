@@ -18,13 +18,8 @@ export const AddonVersionResponseSchema = Type.Object({
 export type AddonVersionResponse = Static<typeof AddonVersionResponseSchema>;
 
 // Find Addon Versions
-export const FindAddonVersionsParamsSchema = Type.Object({
-  addonId: Type.String(),
-});
-
-export type FindAddonVersionsParams = Static<typeof FindAddonVersionsParamsSchema>;
-
 export const FindAddonVersionsQuerySchema = Type.Object({
+  addonId: Type.Optional(Type.String()),
   after: Type.Optional(Type.String()),
   first: Type.Optional(Type.Integer({ minimum: 1, maximum: 100, default: 50 })),
 });
@@ -51,20 +46,14 @@ export type FindAddonVersionsResponse = Static<typeof FindAddonVersionsResponseS
 
 // Find Addon Version By Id
 export const FindAddonVersionParamsSchema = Type.Object({
-  addonId: Type.String(),
   id: Type.String(),
 });
 
 export type FindAddonVersionParams = Static<typeof FindAddonVersionParamsSchema>;
 
 // Create Addon Version
-export const CreateAddonVersionParamsSchema = Type.Object({
-  addonId: Type.String(),
-});
-
-export type CreateAddonVersionParams = Static<typeof CreateAddonVersionParamsSchema>;
-
 export const CreateAddonVersionSchema = Type.Object({
+  addonId: Type.String(),
   version: Type.String(),
   gameVersion: Type.String(),
   changelog: Type.String(),
@@ -81,7 +70,6 @@ export const UpdateAddonVersionSchema = Type.Object({
 export type UpdateAddonVersion = Static<typeof UpdateAddonVersionSchema>;
 
 export const UpdateAddonVersionParamsSchema = Type.Object({
-  addonId: Type.String(),
   id: Type.String(),
 });
 
@@ -89,7 +77,6 @@ export type UpdateAddonVersionParams = Static<typeof UpdateAddonVersionParamsSch
 
 // Delete Addon Version
 export const DeleteAddonVersionParamsSchema = Type.Object({
-  addonId: Type.String(),
   id: Type.String(),
 });
 

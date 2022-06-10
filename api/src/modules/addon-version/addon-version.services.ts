@@ -18,32 +18,24 @@ type AddonVersionWithUrl = AddonVersion & {
   downloadUrl: string;
 };
 
-type WithAddonId<T> = T & {
-  addonId: string;
-};
-
-type AddonVersionKeys = WithAddonId<{
-  id: AddonVersion['id'];
-}>;
-
 interface AddonVersionService {
   findAddonVersions(
-    query: WithAddonId<FindAddonVersionsQuery>
+    query: FindAddonVersionsQuery
   ): Promise<Connection<AddonVersionWithUrl, Edge<AddonVersionWithUrl>>>;
-  findAddonVersionById(keys: AddonVersionKeys): Promise<AddonVersionWithUrl>;
-  createAddonVersion(data: WithAddonId<CreateAddonVersion>): Promise<AddonVersionWithUrl>;
+  findAddonVersionById(id: AddonVersion['id']): Promise<AddonVersionWithUrl>;
+  createAddonVersion(data: CreateAddonVersion): Promise<AddonVersionWithUrl>;
   updateAddonVersion(
-    keys: AddonVersionKeys,
+    id: AddonVersion['id'],
     data: UpdateAddonVersion
   ): Promise<AddonVersionWithUrl>;
-  deleteAddonVersion(keys: AddonVersionKeys): Promise<AddonVersion>;
+  deleteAddonVersion(id: AddonVersion['id']): Promise<AddonVersion>;
 }
 
 class AddonVersionServiceImpl implements AddonVersionService {
   private readonly MINIO_BUCKET = 'addons';
 
   findAddonVersions(
-    query: WithAddonId<FindAddonVersionsQuery>
+    query: FindAddonVersionsQuery
   ): Promise<Connection<AddonVersionWithUrl, Edge<AddonVersionWithUrl>>> {
     return findManyCursorConnection(
       args =>
@@ -55,10 +47,10 @@ class AddonVersionServiceImpl implements AddonVersionService {
     );
   }
 
-  async findAddonVersionById(keys: AddonVersionKeys): Promise<AddonVersionWithUrl> {
+  async findAddonVersionById(id: AddonVersion['id']): Promise<AddonVersionWithUrl> {
     try {
-      const addonVersion = await prisma.addonVersion.findFirst({
-        where: { addonId: keys.addonId, id: keys.id },
+      const addonVersion = await prisma.addonVersion.findUnique({
+        where: { id },
         rejectOnNotFound: true,
       });
       return this.convertToAddonVersionWithUrl(addonVersion);
@@ -67,7 +59,7 @@ class AddonVersionServiceImpl implements AddonVersionService {
     }
   }
 
-  async createAddonVersion(rawData: WithAddonId<CreateAddonVersion>): Promise<AddonVersionWithUrl> {
+  async createAddonVersion(rawData: CreateAddonVersion): Promise<AddonVersionWithUrl> {
     try {
       const data = {
         addonId: rawData.addonId,
@@ -99,14 +91,12 @@ class AddonVersionServiceImpl implements AddonVersionService {
   }
 
   async updateAddonVersion(
-    keys: AddonVersionKeys,
+    id: AddonVersion['id'],
     data: UpdateAddonVersion
   ): Promise<AddonVersionWithUrl> {
     try {
       const version = await prisma.addonVersion.update({
-        where: {
-          id: keys.id,
-        },
+        where: { id },
         data,
       });
       return this.convertToAddonVersionWithUrl(version);
@@ -115,14 +105,12 @@ class AddonVersionServiceImpl implements AddonVersionService {
     }
   }
 
-  async deleteAddonVersion(keys: AddonVersionKeys): Promise<AddonVersion> {
+  async deleteAddonVersion(id: AddonVersion['id']): Promise<AddonVersion> {
     try {
       const version = await prisma.addonVersion.delete({
-        where: {
-          id: keys.id,
-        },
+        where: { id },
       });
-      await minioClient.removeObject(this.MINIO_BUCKET, keys.id);
+      await minioClient.removeObject(this.MINIO_BUCKET, id);
 
       // Update the latest version in the addon to the previous one
       const latestVersion = await prisma.addonVersion.findFirst({

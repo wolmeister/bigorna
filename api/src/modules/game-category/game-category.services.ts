@@ -17,7 +17,7 @@ import {
 } from './game-category.schemas';
 
 type GameCategoryWithUrl = GameCategory & {
-  iconUrl: string | null;
+  iconUrl: string;
 };
 
 type WithGameId<T> = T & {

@@ -13,7 +13,7 @@ import {
 import { CreateGame, FindGamesQuery, UpdateGame } from './game.schemas';
 
 type GameWithUrl = Game & {
-  posterUrl: string | null;
+  posterUrl: string;
 };
 
 interface GameService {

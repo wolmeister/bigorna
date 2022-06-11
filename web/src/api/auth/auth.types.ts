@@ -1,3 +1,5 @@
+import { User } from '../user';
+
 export type AuthRequest = {
   email: string;
   password: string;
@@ -5,11 +7,7 @@ export type AuthRequest = {
 
 export type AuthResponse = {
   token: string;
-  user: {
-    id: string;
-    username: string;
-    email: string;
-  };
+  user: User;
 };
 
 export interface AuthService {

@@ -1,5 +1,7 @@
 import { Static, Type } from '@sinclair/typebox';
 
+import { UserResponseSchema } from '../user';
+
 // Authentication
 export const AuthenticationSchema = Type.Object({
   email: Type.String({ format: 'email' }),
@@ -10,11 +12,7 @@ export type Authentication = Static<typeof AuthenticationSchema>;
 
 export const AuthenticationResponseSchema = Type.Object({
   token: Type.String(),
-  user: Type.Object({
-    id: Type.String(),
-    username: Type.String(),
-    email: Type.String(),
-  }),
+  user: UserResponseSchema,
 });
 
 export type AuthenticationResponse = Static<typeof AuthenticationResponseSchema>;

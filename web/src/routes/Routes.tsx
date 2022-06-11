@@ -1,9 +1,11 @@
+import React from 'react';
 import { Route, Routes } from 'react-router-dom';
+
 import { addonRoutes } from '../modules/addon';
 import { authRoutes } from '../modules/auth';
 import { gameRoutes } from '../modules/game';
 
-const routes = [...addonRoutes, ...authRoutes, ...gameRoutes];
+const routes = [...addonRoutes, ...gameRoutes];
 
 export function AppRoutes() {
   return (

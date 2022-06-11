@@ -1,3 +1,5 @@
+import React from 'react';
+
 import { RouteProps } from '../../routes/Routes.types';
 import { AddonPage } from './pages/AddonPage';
 import { AddonsPage } from './pages/AddonsPage';

@@ -1,3 +1,8 @@
+import { AppShell } from '@mantine/core';
+import React from 'react';
+
+import { AppHeader } from '../../../components/AppHeader/AppHeader';
+
 export function AddonsPage() {
-  return <h1>AddonsPage</h1>;
+  return <AppShell header={<AppHeader />} />;
 }

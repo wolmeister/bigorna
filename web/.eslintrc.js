@@ -48,6 +48,8 @@ module.exports = {
     'react/jsx-filename-extension': ['warn', { extensions: ['.tsx'] }],
     'react/prop-types': 'off',
     'react/require-default-props': 'off',
+    'react/jsx-props-no-spreading': 'off',
+    'react/no-unescaped-entities': 'off',
   },
   settings: {
     'import/resolver': {

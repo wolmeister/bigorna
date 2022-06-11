@@ -1,3 +1,3 @@
-import { PathRouteProps, LayoutRouteProps, IndexRouteProps } from 'react-router-dom';
+import { IndexRouteProps, LayoutRouteProps, PathRouteProps } from 'react-router-dom';
 
 export type RouteProps = PathRouteProps | LayoutRouteProps | IndexRouteProps;

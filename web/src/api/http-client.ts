@@ -23,8 +23,15 @@ export interface HttpClient {
   delete<Res, Q = unknown, P = unknown>(url: string, options?: RequestOptions<Q, P>): Promise<Res>;
 }
 
+export interface ApiError {
+  statusCode: number;
+  code: string;
+  error: string;
+  message: string;
+}
+
 export class HttpError extends Error {
-  constructor(public code: number, public error: string) {
+  constructor(public code: number, public error: ApiError) {
     super(`[Http Error ${code}]: ${error}`);
   }
 }
@@ -117,7 +124,7 @@ export class HttpClientImpl implements HttpClient {
     });
 
     if (!res.ok) {
-      throw new HttpError(res.status, await res.text());
+      throw new HttpError(res.status, JSON.parse(await res.text()));
     }
 
     const jsonRes = await res.json();

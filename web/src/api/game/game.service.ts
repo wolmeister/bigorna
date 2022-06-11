@@ -13,12 +13,18 @@ export class GameServiceImpl implements GameService {
     return this.httpClient.get<Game>('/games/:id', { params: { id } });
   }
 
-  createGame(data: CreateGame): Promise<Game> {
-    return this.httpClient.post<Game, CreateGame>('/games', data);
+  createGame(rawData: CreateGame): Promise<Game> {
+    const data = new FormData();
+    data.set('name', rawData.name);
+    data.set('poster', rawData.poster);
+    return this.httpClient.post<Game, FormData>('/games', data);
   }
 
-  updateGame(id: string, data: UpdateGame): Promise<Game> {
-    return this.httpClient.put<Game, UpdateGame>('/games/:id', data, { params: { id } });
+  updateGame(id: string, rawData: UpdateGame): Promise<Game> {
+    const data = new FormData();
+    data.set('name', rawData.name);
+    data.set('poster', rawData.poster);
+    return this.httpClient.put<Game, FormData>('/games/:id', data, { params: { id } });
   }
 
   deleteGame(id: string): Promise<Game> {

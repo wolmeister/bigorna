@@ -73,7 +73,7 @@ export class HttpClientImpl implements HttpClient {
   private async doFetch<Res, Req, Q = unknown, P = unknown>(
     url: string,
     method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE',
-    body?: Req,
+    rawBody?: Req,
     options?: RequestOptions<Q, P>
   ) {
     // Apply path params
@@ -94,14 +94,26 @@ export class HttpClientImpl implements HttpClient {
 
     finalUrl += urlSearchParams.toString();
 
+    let body: BodyInit | undefined;
+    let contentType = 'application/json';
+
+    if (rawBody) {
+      if (rawBody instanceof FormData) {
+        body = rawBody;
+        contentType = 'multipart/form-data';
+      } else {
+        body = JSON.stringify(rawBody);
+      }
+    }
+
     // Perform the request
     const res = await fetch(finalUrl, {
       // @TODO: Support formdata
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': contentType,
       },
       method,
-      body: body ? JSON.stringify(body) : undefined,
+      body,
     });
 
     if (!res.ok) {

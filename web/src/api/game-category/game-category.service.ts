@@ -25,12 +25,19 @@ export class GameCategoryServiceImpl implements GameCategoryService {
     });
   }
 
-  createGameCategory(data: CreateGameCategory): Promise<GameCategory> {
-    return this.httpClient.post<GameCategory, UpdateGameCategory>('/game-categories/:gameId', data);
+  createGameCategory(rawData: CreateGameCategory): Promise<GameCategory> {
+    const data = new FormData();
+    data.set('gameId', rawData.gameId);
+    data.set('name', rawData.name);
+    data.set('icon', rawData.icon);
+    return this.httpClient.post<GameCategory, FormData>('/game-categories/:gameId', data);
   }
 
-  updateGameCategory(id: GameCategory['id'], data: UpdateGameCategory): Promise<GameCategory> {
-    return this.httpClient.put<GameCategory, UpdateGameCategory>('/game-categories/:id', data, {
+  updateGameCategory(id: GameCategory['id'], rawData: UpdateGameCategory): Promise<GameCategory> {
+    const data = new FormData();
+    data.set('name', rawData.name);
+    data.set('icon', rawData.icon);
+    return this.httpClient.put<GameCategory, FormData>('/game-categories/:id', data, {
       params: { id },
     });
   }

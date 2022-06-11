@@ -18,7 +18,6 @@ export interface CreateGameCategory {
 }
 
 export interface UpdateGameCategory {
-  gameId: Game['id'];
   name: string;
   icon: Blob;
 }

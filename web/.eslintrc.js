@@ -27,7 +27,7 @@ module.exports = {
   ],
   rules: {
     // plugin rules
-    'import/extensions': ['error', 'ignorePackages', { ts: 'never' }],
+    'import/extensions': ['error', 'ignorePackages', { ts: 'never', tsx: 'never' }],
     'import/prefer-default-export': 'off',
     'simple-import-sort/imports': 'error',
     'prettier/prettier': 'error',

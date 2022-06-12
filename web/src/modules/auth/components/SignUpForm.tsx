@@ -32,11 +32,13 @@ export function SignUpForm({ onGoToSignIn, onClose }: SignUpFormProps) {
     },
   });
 
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = useCallback(
     async (data: FormValues) => {
       try {
+        setLoading(true);
         setError(null);
         await userService.createUser(data);
         const res = await authService.authenticate(data);
@@ -57,6 +59,8 @@ export function SignUpForm({ onGoToSignIn, onClose }: SignUpFormProps) {
         } else {
           setError('Unknown error');
         }
+      } finally {
+        setLoading(false);
       }
     },
     [onClose]
@@ -98,7 +102,9 @@ export function SignUpForm({ onGoToSignIn, onClose }: SignUpFormProps) {
           <Anchor component="button" type="button" color="gray" size="sm" onClick={onGoToSignIn}>
             Have an account? Login
           </Anchor>
-          <Button type="submit">Register</Button>
+          <Button type="submit" loading={loading}>
+            Register
+          </Button>
         </Group>
       </form>
     </Paper>

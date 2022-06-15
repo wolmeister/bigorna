@@ -29,8 +29,26 @@ module.exports = {
     // plugin rules
     'import/extensions': ['error', 'ignorePackages', { ts: 'never', tsx: 'never' }],
     'import/prefer-default-export': 'off',
-    'simple-import-sort/imports': 'error',
     'prettier/prettier': 'error',
+    'simple-import-sort/imports': [
+      'error',
+      {
+        groups: [
+          ['^\\u0000'],
+          // React packages
+          ['^react(\\w)?', '^(?!=react)@?\\w'],
+          // Anything not matched in another group.
+          ['^'],
+          ['^@app/\\w'],
+          // Relative imports.
+          // Anything that starts with two or more dots.
+          ['^\\.\\.'],
+          // Anything that starts with only one dot.
+          ['^\\./'],
+        ],
+      },
+    ],
+    'simple-import-sort/exports': 'error',
 
     // basic rules
     'max-classes-per-file': 'off',

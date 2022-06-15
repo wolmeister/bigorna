@@ -1,9 +1,11 @@
-import { Avatar, Button, Group, Header, Image, Menu, Modal } from '@mantine/core';
 import React, { useCallback, useState } from 'react';
-import { Logout } from 'tabler-icons-react';
+import { Link } from 'react-router-dom';
+import { Avatar, Button, Group, Header, Image, Menu, UnstyledButton } from '@mantine/core';
+import { DeviceGamepad2, Folders, Logout } from 'tabler-icons-react';
 
-import { AuthenticateModal } from '../../modules/auth/components/AuthenticateModal';
-import { setToken, setUser, useUser } from '../../modules/auth/stores/auth-store';
+import { UserRole } from '../../api/user';
+import { AuthenticateModal, setToken, setUser, useUser } from '../../modules/auth';
+
 import { useStyles } from './AppHeader.styles';
 
 export function AppHeader() {
@@ -35,13 +37,37 @@ export function AppHeader() {
           <Image src="favicon.png" mr="md" fit="contain" height={40} width={40} />
           <h2 className={classes.title}>bigorna</h2>
         </div>
+
+        <Group sx={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)' }}>
+          <Button variant="subtle" component={Link} to="/search">
+            Browse
+          </Button>
+          {user && (
+            <Button variant="subtle" component={Link} to="/new-addon">
+              Publish
+            </Button>
+          )}
+          {user?.role === UserRole.ADMIN && (
+            <Menu control={<Button variant="subtle">Manage</Button>}>
+              <Menu.Item icon={<DeviceGamepad2 size={14} />} component={Link} to="/games">
+                Games
+              </Menu.Item>
+              <Menu.Item icon={<Folders size={14} />} component={Link} to="/game-categories">
+                Categories
+              </Menu.Item>
+            </Menu>
+          )}
+        </Group>
+
         <Group>
           {user && (
             <Menu
               control={
-                <Avatar color="orange" radius="xl">
-                  {user.username.substring(0, 2).toUpperCase()}
-                </Avatar>
+                <UnstyledButton>
+                  <Avatar color="orange" radius="xl">
+                    {user.username.substring(0, 2).toUpperCase()}
+                  </Avatar>
+                </UnstyledButton>
               }
             >
               <Menu.Item icon={<Logout size={14} />} onClick={handleLogout}>

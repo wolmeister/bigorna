@@ -9,7 +9,4 @@ export const useStyles = createStyles(() => ({
   group: {
     height: '100%',
   },
-  title: {
-    margin: 0,
-  },
 }));

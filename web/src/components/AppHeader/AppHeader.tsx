@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Avatar, Button, Group, Header, Image, Menu, UnstyledButton } from '@mantine/core';
+import { Avatar, Button, Group, Header, Image, Menu, Title, UnstyledButton } from '@mantine/core';
 import { DeviceGamepad2, Folders, Logout } from 'tabler-icons-react';
 
 import { UserRole } from '../../api/user';
@@ -35,7 +35,7 @@ export function AppHeader() {
       <Group className={classes.group} position="apart">
         <div className={classes.logoContainer}>
           <Image src="favicon.png" mr="md" fit="contain" height={40} width={40} />
-          <h2 className={classes.title}>bigorna</h2>
+          <Title order={2}>bigorna</Title>
         </div>
 
         <Group sx={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)' }}>

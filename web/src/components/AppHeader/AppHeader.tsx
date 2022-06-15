@@ -44,7 +44,7 @@ export function AppHeader() {
           </Button>
           {user && (
             <Button variant="subtle" component={Link} to="/new-addon">
-              Publish
+              My Addons
             </Button>
           )}
           {user?.role === UserRole.ADMIN && (

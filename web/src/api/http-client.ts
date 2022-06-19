@@ -102,23 +102,26 @@ export class HttpClientImpl implements HttpClient {
     finalUrl += urlSearchParams.toString();
 
     let body: BodyInit | undefined;
-    let contentType = 'application/json';
+    let contentType: string | null = 'application/json';
 
     if (rawBody) {
       if (rawBody instanceof FormData) {
         body = rawBody;
-        contentType = 'multipart/form-data';
+        // Let the fetch find the right header and boundary
+        contentType = null;
       } else {
         body = JSON.stringify(rawBody);
       }
     }
 
+    const headers: HeadersInit = {};
+    if (contentType) {
+      headers['Content-Type'] = contentType;
+    }
+
     // Perform the request
     const res = await fetch(finalUrl, {
-      // @TODO: Support formdata
-      headers: {
-        'Content-Type': contentType,
-      },
+      headers,
       method,
       body,
     });

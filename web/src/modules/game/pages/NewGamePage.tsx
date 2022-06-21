@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { Anchor, Breadcrumbs, Divider } from '@mantine/core';
 import { showNotification } from '@mantine/notifications';
 import { X } from 'tabler-icons-react';
 
@@ -38,6 +39,18 @@ export function NewGamePage() {
 
   return (
     <AppLayout>
+      <Breadcrumbs>
+        <Anchor component={Link} to="/">
+          Home
+        </Anchor>
+        <Anchor component={Link} to="/games">
+          Games
+        </Anchor>
+        <Anchor component={Link} to="/new-game">
+          New Game
+        </Anchor>
+      </Breadcrumbs>
+      <Divider mt="md" mb="md" />
       <GameForm onSubmit={handleSubmit} />
     </AppLayout>
   );

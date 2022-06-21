@@ -1,6 +1,6 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Anchor, Breadcrumbs, Button, Divider, Group, TextInput } from '@mantine/core';
+import { Button, Group, TextInput } from '@mantine/core';
 import { useForm, zodResolver } from '@mantine/form';
 import { UseFormReturnType } from '@mantine/form/lib/use-form';
 import { Signature } from 'tabler-icons-react';
@@ -18,7 +18,7 @@ const schema = z.object({
 export type GameFormValues = z.infer<typeof schema>;
 export type GameFormState = UseFormReturnType<GameFormValues>;
 export type GameFormProps = {
-  game?: Game;
+  game?: Game | null;
   onSubmit: (data: GameFormValues, form: GameFormState) => void | Promise<void>;
 };
 
@@ -45,55 +45,47 @@ export function GameForm({ game, onSubmit }: GameFormProps) {
     [form, onSubmit]
   );
 
+  // https://github.com/mantinedev/mantine/pull/1422
+  const formRef = useRef(form);
+  useLayoutEffect(() => {
+    formRef.current = form;
+  }, [form]);
+
   useEffect(() => {
     if (game) {
-      form.setFieldValue('name', game.name);
+      formRef.current.setFieldValue('name', game.name);
       getImageFromUrl(game.posterUrl).then(posterFile => {
-        form.setFieldValue('poster', posterFile);
+        formRef.current.setFieldValue('poster', posterFile);
       });
     }
-  }, [form, game]);
+  }, [game]);
 
   return (
-    <>
-      <Breadcrumbs>
-        <Anchor component={Link} to="/">
-          Home
-        </Anchor>
-        <Anchor component={Link} to="/games">
-          Games
-        </Anchor>
-        <Anchor component={Link} to="/new-game">
-          New Game
-        </Anchor>
-      </Breadcrumbs>
-      <Divider mt="md" mb="md" />
-      <form onSubmit={form.onSubmit(handleSubmit)}>
-        <TextInput
-          data-autofocus
-          required
-          placeholder="The game name"
-          label="Name"
-          icon={<Signature size={18} />}
-          {...form.getInputProps('name')}
-        />
-        <ImageUpload label="Poster" required {...form.getInputProps('poster')} />
-        <Group>
-          <Button type="submit" mt="xl" loading={loading}>
-            Create
-          </Button>
-          <Button
-            type="button"
-            mt="xl"
-            loading={loading}
-            variant="subtle"
-            component={Link}
-            to="/games"
-          >
-            Cancel
-          </Button>
-        </Group>
-      </form>
-    </>
+    <form onSubmit={form.onSubmit(handleSubmit)}>
+      <TextInput
+        data-autofocus
+        required
+        placeholder="The game name"
+        label="Name"
+        icon={<Signature size={18} />}
+        {...form.getInputProps('name')}
+      />
+      <ImageUpload label="Poster" required {...form.getInputProps('poster')} />
+      <Group>
+        <Button type="submit" mt="xl" loading={loading}>
+          {game ? 'Update' : 'Create'}
+        </Button>
+        <Button
+          type="button"
+          mt="xl"
+          loading={loading}
+          variant="subtle"
+          component={Link}
+          to="/games"
+        >
+          Cancel
+        </Button>
+      </Group>
+    </form>
   );
 }

@@ -1,5 +1,6 @@
 import { Connection, Edge } from '../common';
 import { HttpClient } from '../http-client';
+
 import { CreateGame, FindGamesQuery, Game, GameService, UpdateGame } from './game.types';
 
 export class GameServiceImpl implements GameService {
@@ -24,7 +25,7 @@ export class GameServiceImpl implements GameService {
     const data = new FormData();
     data.set('name', rawData.name);
     data.set('poster', rawData.poster);
-    return this.httpClient.put<Game, FormData>('/games/:id', data, { params: { id } });
+    return this.httpClient.patch<Game, FormData>('/games/:id', data, { params: { id } });
   }
 
   deleteGame(id: string): Promise<Game> {

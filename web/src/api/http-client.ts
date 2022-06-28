@@ -102,7 +102,7 @@ export class HttpClientImpl implements HttpClient {
     finalUrl += urlSearchParams.toString();
 
     let body: BodyInit | undefined;
-    let contentType: string | null = 'application/json';
+    let contentType: string | null = null;
 
     if (rawBody) {
       if (rawBody instanceof FormData) {
@@ -111,6 +111,7 @@ export class HttpClientImpl implements HttpClient {
         contentType = null;
       } else {
         body = JSON.stringify(rawBody);
+        contentType = 'application/json';
       }
     }
 

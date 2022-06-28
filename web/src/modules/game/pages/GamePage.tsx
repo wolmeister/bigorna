@@ -6,16 +6,19 @@ import {
   Breadcrumbs,
   Divider,
   Group,
+  Tabs,
   Text,
   Tooltip,
   useMantineTheme,
 } from '@mantine/core';
 import { useModals } from '@mantine/modals';
 import { showNotification } from '@mantine/notifications';
-import { Pencil, Trash, X } from 'tabler-icons-react';
+import { FolderPlus, Folders, InfoCircle, Pencil, Trash, X } from 'tabler-icons-react';
 
-import { gameService } from '../../../api';
+import { gameCategoryService, gameService } from '../../../api';
 import { Game } from '../../../api/game';
+import { GameCategory } from '../../../api/game-category';
+import { AppCard } from '../../../components/AppCard/AppCard';
 import { AppLayout } from '../../../components/AppLayout/AppLayout';
 import { GameForm } from '../components/GameForm';
 
@@ -39,6 +42,7 @@ export function GamePage() {
   const modals = useModals();
 
   const [game, setGame] = useState<Game | null>(null);
+  const [categories, setCategories] = useState<GameCategory[]>([]);
 
   const deleteGame = useCallback(() => {
     modals.openConfirmModal({
@@ -91,6 +95,10 @@ export function GamePage() {
         showNoGameFoundNotification();
         navigate('/games');
       });
+
+    gameCategoryService.findGameCategories({ gameId: id }).then(result => {
+      setCategories(result.edges.map(edge => edge.node));
+    });
   }, [id, navigate]);
 
   return (
@@ -108,6 +116,11 @@ export function GamePage() {
           </Anchor>
         </Breadcrumbs>
         <Group>
+          <Tooltip label="Create Category">
+            <ActionIcon variant="filled" component={Link} to={`/games/${game?.id}/new-category`}>
+              <FolderPlus color={theme.primaryColor} />
+            </ActionIcon>
+          </Tooltip>
           <Tooltip label="Edit">
             <ActionIcon variant="filled" component={Link} to={`/games/${game?.id}/update`}>
               <Pencil color={theme.primaryColor} />
@@ -121,7 +134,23 @@ export function GamePage() {
         </Group>
       </Group>
       <Divider mt="md" mb="md" />
-      <GameForm game={game} disabled />
+      <Tabs>
+        <Tabs.Tab label="Game" icon={<InfoCircle size={14} />}>
+          <GameForm game={game} disabled />
+        </Tabs.Tab>
+        <Tabs.Tab label="Categories" icon={<Folders size={14} />}>
+          <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
+            {categories.map(category => (
+              <AppCard
+                key={category.id}
+                navigateTo={`/game-categories/${category.id}`}
+                title={category.name}
+                imageUrl={category.iconUrl}
+              />
+            ))}
+          </div>
+        </Tabs.Tab>
+      </Tabs>
     </AppLayout>
   );
 }

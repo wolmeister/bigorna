@@ -52,9 +52,9 @@ export function AppHeader() {
               <Menu.Item icon={<DeviceGamepad2 size={14} />} component={Link} to="/games">
                 Games
               </Menu.Item>
-              <Menu.Item icon={<Folders size={14} />} component={Link} to="/game-categories">
+              {/* <Menu.Item icon={<Folders size={14} />} component={Link} to="/game-categories">
                 Categories
-              </Menu.Item>
+              </Menu.Item> */}
             </Menu>
           )}
         </Group>

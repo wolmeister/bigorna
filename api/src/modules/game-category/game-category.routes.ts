@@ -115,7 +115,7 @@ export const gameCategoryRoutes: FastifyPluginAsync = async server => {
     Params: DeleteGameCategoryParams;
     Reply: DeleteGameCategoryResponse;
   }>(
-    '/game-categories:id',
+    '/game-categories/:id',
     {
       schema: {
         tags: ['Game Categories'],

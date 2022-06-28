@@ -99,8 +99,10 @@ export class HttpClientImpl implements HttpClient {
       });
     }
 
-    finalUrl += urlSearchParams.toString();
-
+    if (urlSearchParams.toString().length > 0) {
+      finalUrl += '?';
+      finalUrl += urlSearchParams.toString();
+    }
     let body: BodyInit | undefined;
     let contentType: string | null = null;
 

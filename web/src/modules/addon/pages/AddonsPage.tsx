@@ -1,11 +1,11 @@
 import React from 'react';
-import { AppShell, Card, Image, Text, Title } from '@mantine/core';
+import { Card, Image, Text, Title } from '@mantine/core';
 
-import { AppHeader } from '../../../components/AppHeader/AppHeader';
+import { AppLayout } from '../../../components/AppLayout/AppLayout';
 
 export function AddonsPage() {
   return (
-    <AppShell header={<AppHeader />}>
+    <AppLayout>
       <Title order={2} style={{ margin: 0, marginBottom: 16 }} color="primary">
         Top Games
       </Title>
@@ -112,6 +112,6 @@ export function AddonsPage() {
           </div>
         </Card.Section>
       </Card>
-    </AppShell>
+    </AppLayout>
   );
 }

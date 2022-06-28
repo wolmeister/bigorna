@@ -33,10 +33,10 @@ export function AppHeader() {
   return (
     <Header height={60} pl="md" pr="md">
       <Group className={classes.group} position="apart">
-        <div className={classes.logoContainer}>
+        <Link className={classes.logoContainer} to="/">
           <Image src="/public/favicon.png" mr="md" fit="contain" height={40} width={40} />
-          <Title order={2}>bigorna</Title>
-        </div>
+          <Title order={2}>BIGORNA</Title>
+        </Link>
 
         <Group sx={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)' }}>
           <Button variant="subtle" component={Link} to="/search">

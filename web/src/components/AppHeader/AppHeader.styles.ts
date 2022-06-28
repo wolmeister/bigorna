@@ -5,6 +5,8 @@ export const useStyles = createStyles(() => ({
     display: 'flex',
     height: '100%',
     alignItems: 'center',
+    textDecoration: 'none',
+    color: 'inherit',
   },
   group: {
     height: '100%',

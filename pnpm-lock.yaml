@@ -90,12 +90,13 @@ importers:
 
   web:
     specifiers:
-      '@mantine/core': ^4.2.9
-      '@mantine/dropzone': ^4.2.9
-      '@mantine/form': ^4.2.9
-      '@mantine/hooks': ^4.2.9
-      '@mantine/notifications': ^4.2.9
-      '@mantine/rte': ^4.2.9
+      '@mantine/core': ^4.2.10
+      '@mantine/dropzone': ^4.2.10
+      '@mantine/form': ^4.2.10
+      '@mantine/hooks': ^4.2.10
+      '@mantine/modals': ^4.2.10
+      '@mantine/notifications': ^4.2.10
+      '@mantine/rte': ^4.2.10
       '@types/react': ^17.0.33
       '@types/react-dom': ^17.0.10
       '@typescript-eslint/eslint-plugin': ^5.14.0
@@ -121,12 +122,13 @@ importers:
       zod: ^3.17.3
       zustand: ^4.0.0-rc.0
     dependencies:
-      '@mantine/core': 4.2.9_bpbgmfutu7hdp24lgbuixefllm
-      '@mantine/dropzone': 4.2.9_sa5lhtu6chwmwxpz4rwknrt4sq
-      '@mantine/form': 4.2.9_react@17.0.2
-      '@mantine/hooks': 4.2.9_react@17.0.2
-      '@mantine/notifications': 4.2.9_sa5lhtu6chwmwxpz4rwknrt4sq
-      '@mantine/rte': 4.2.9_sa5lhtu6chwmwxpz4rwknrt4sq
+      '@mantine/core': 4.2.10_hqyfsnk6uvamfkyc6lmuydrwou
+      '@mantine/dropzone': 4.2.10_hopjwyvsyqay5yydnibtahncmu
+      '@mantine/form': 4.2.10_react@17.0.2
+      '@mantine/hooks': 4.2.10_react@17.0.2
+      '@mantine/modals': 4.2.10_hopjwyvsyqay5yydnibtahncmu
+      '@mantine/notifications': 4.2.10_hopjwyvsyqay5yydnibtahncmu
+      '@mantine/rte': 4.2.10_hopjwyvsyqay5yydnibtahncmu
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
       react-router-dom: 6.3.0_sfoxds7t5ydpegc3knd667wn6m
@@ -593,15 +595,15 @@ packages:
       '@jridgewell/sourcemap-codec': 1.4.11
     dev: true
 
-  /@mantine/core/4.2.9_bpbgmfutu7hdp24lgbuixefllm:
-    resolution: {integrity: sha512-25krgKF7FUFDsF5IYk+A/7GjgAZFzEcaFmGvscXS/7ccOickBmXzENwY9eJpv+MDo/7Sj5eiS0ZBi+WN27tdcw==}
+  /@mantine/core/4.2.10_hqyfsnk6uvamfkyc6lmuydrwou:
+    resolution: {integrity: sha512-UCPhDcumygfBvik64VkMnBvqy0ZN9q+1AQ0fPdK8aAUvjRBWSyH0dJPL55vsK1ODboKktSEsyjHtb09DroL7fA==}
     peerDependencies:
-      '@mantine/hooks': 4.2.9
+      '@mantine/hooks': 4.2.10
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
     dependencies:
-      '@mantine/hooks': 4.2.9_react@17.0.2
-      '@mantine/styles': 4.2.9_wsn53pslsboo2rytzocxzsur7i
+      '@mantine/hooks': 4.2.10_react@17.0.2
+      '@mantine/styles': 4.2.10_wsn53pslsboo2rytzocxzsur7i
       '@popperjs/core': 2.11.5
       '@radix-ui/react-scroll-area': 0.1.4_react@17.0.2
       react: 17.0.2
@@ -613,62 +615,76 @@ packages:
       - '@types/react'
     dev: false
 
-  /@mantine/dropzone/4.2.9_sa5lhtu6chwmwxpz4rwknrt4sq:
-    resolution: {integrity: sha512-EJCx5iUHAUajlq3Ne+/z2nQRkPT+rhcJ56Kp8t2KZV42wYC2gAD3BVeZ+1dP8zRvSBo56mRPOxUWS77gBxSKeg==}
+  /@mantine/dropzone/4.2.10_hopjwyvsyqay5yydnibtahncmu:
+    resolution: {integrity: sha512-I31He0+gl1MDk/L72iGcQ4ekMlad3/n6oMk47PZ2F+aUCnsewldzYZ60/6jWwdYy9+u8CSnMbfwwYnFlXevPMA==}
     peerDependencies:
-      '@mantine/core': 4.2.9
-      '@mantine/hooks': 4.2.9
+      '@mantine/core': 4.2.10
+      '@mantine/hooks': 4.2.10
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
     dependencies:
-      '@mantine/core': 4.2.9_bpbgmfutu7hdp24lgbuixefllm
-      '@mantine/hooks': 4.2.9_react@17.0.2
+      '@mantine/core': 4.2.10_hqyfsnk6uvamfkyc6lmuydrwou
+      '@mantine/hooks': 4.2.10_react@17.0.2
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
       react-dropzone: 11.7.1_react@17.0.2
     dev: false
 
-  /@mantine/form/4.2.9_react@17.0.2:
-    resolution: {integrity: sha512-tr9DwZBNM404zKNk+5l7RWBxn23K0m6irRmdMeWtruxNRbHmpWncqJ68WExTzvJMk/tWaVchJwXmq7M2DO+RxQ==}
+  /@mantine/form/4.2.10_react@17.0.2:
+    resolution: {integrity: sha512-Baguw7ko0Q0arUQEv4mjbbsHVoagAERpvG13FdETfHhDougdzBcp3WuNxehvWMyW3H9Q836/eFaEYdyD5uzelQ==}
     peerDependencies:
       react: '>=16.8.0'
     dependencies:
       react: 17.0.2
     dev: false
 
-  /@mantine/hooks/4.2.9_react@17.0.2:
-    resolution: {integrity: sha512-oLtlSXkl99vPGBTR9yoVCWoCQ25Bc4WhPci31iERMLMM/0fz85CZayQcAC4etq6un6rDiRNu6jq0YB1S5stmPg==}
+  /@mantine/hooks/4.2.10_react@17.0.2:
+    resolution: {integrity: sha512-gVYWeE4Ieu6FBwh9h/3FjcrrNzKx1k6Yw07/LSngJP0uT3fLt1gvY2p4PtPpOh7z2/RpTXBR1x+dOgEUKomYUQ==}
     peerDependencies:
       react: '>=16.8.0'
     dependencies:
       react: 17.0.2
     dev: false
 
-  /@mantine/notifications/4.2.9_sa5lhtu6chwmwxpz4rwknrt4sq:
-    resolution: {integrity: sha512-t19JCCBmJl9/vXlE4vLiz9WqssvNL50MFgJ30MwI+Rc36xO3PnvY3LX3hULKmqOtOlVdTcWz2RwbPkVjM8/c7A==}
+  /@mantine/modals/4.2.10_hopjwyvsyqay5yydnibtahncmu:
+    resolution: {integrity: sha512-lIHgNkP/dAtJdco/1S1as6hw5QPQS/1Y/h7GuEdUQXXAcEQVPIqu+qwTeEzR9/K+sIciAg5IHazMr66OOf0/mw==}
     peerDependencies:
-      '@mantine/core': 4.2.9
-      '@mantine/hooks': 4.2.9
+      '@mantine/core': 4.2.10
+      '@mantine/hooks': 4.2.10
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
     dependencies:
-      '@mantine/core': 4.2.9_bpbgmfutu7hdp24lgbuixefllm
-      '@mantine/hooks': 4.2.9_react@17.0.2
+      '@mantine/core': 4.2.10_hqyfsnk6uvamfkyc6lmuydrwou
+      '@mantine/hooks': 4.2.10_react@17.0.2
+      react: 17.0.2
+      react-dom: 17.0.2_react@17.0.2
+    dev: false
+
+  /@mantine/notifications/4.2.10_hopjwyvsyqay5yydnibtahncmu:
+    resolution: {integrity: sha512-qGkbPoJqFAxlV5nPMiYPDU/2TqPkk1ifcNqJHZe8Vme407XPEW4dl1ZqHVlBfK2wuj3yIS/yMljjbGEgCD5yig==}
+    peerDependencies:
+      '@mantine/core': 4.2.10
+      '@mantine/hooks': 4.2.10
+      react: '>=16.8.0'
+      react-dom: '>=16.8.0'
+    dependencies:
+      '@mantine/core': 4.2.10_hqyfsnk6uvamfkyc6lmuydrwou
+      '@mantine/hooks': 4.2.10_react@17.0.2
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
       react-transition-group: 4.4.2_sfoxds7t5ydpegc3knd667wn6m
     dev: false
 
-  /@mantine/rte/4.2.9_sa5lhtu6chwmwxpz4rwknrt4sq:
-    resolution: {integrity: sha512-VNp/Vl215nqpjufj6LbMupTILSQPdK+SxneeDiT+SsW1gw3k6Z7DOcAsfWLGDF5/kLLdIqMpHSCcgfg3AVQf1Q==}
+  /@mantine/rte/4.2.10_hopjwyvsyqay5yydnibtahncmu:
+    resolution: {integrity: sha512-rzOkfcJ6pZxLdARrBYRx/yCWyDTzAC+C+yMPGlrW9zig9lWng7OEhkAa8QdUQoTHTxgmY1tgbGLAnjdvzuR5lQ==}
     peerDependencies:
-      '@mantine/core': 4.2.9
-      '@mantine/hooks': 4.2.9
+      '@mantine/core': 4.2.10
+      '@mantine/hooks': 4.2.10
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
     dependencies:
-      '@mantine/core': 4.2.9_bpbgmfutu7hdp24lgbuixefllm
-      '@mantine/hooks': 4.2.9_react@17.0.2
+      '@mantine/core': 4.2.10_hqyfsnk6uvamfkyc6lmuydrwou
+      '@mantine/hooks': 4.2.10_react@17.0.2
       '@modulz/radix-icons': 4.0.0_react@17.0.2
       quill-mention: 3.1.0
       react: 17.0.2
@@ -676,8 +692,8 @@ packages:
       react-quill: 2.0.0-beta.4_sfoxds7t5ydpegc3knd667wn6m
     dev: false
 
-  /@mantine/styles/4.2.9_wsn53pslsboo2rytzocxzsur7i:
-    resolution: {integrity: sha512-UT5m1412N20HPl+Mg2zTN7gP34J1GIa3o7eQ+fHThAQkAMm/vBehzX8nkbdxwyYkwuu6+/4kizcbM/Op4jMI3g==}
+  /@mantine/styles/4.2.10_wsn53pslsboo2rytzocxzsur7i:
+    resolution: {integrity: sha512-dWwCzBLYE8CwPJSPlV3MyIuR4ET3u6O+T+VmxY0lab6w/bqflseNSh9UBIW2AUoIYtxPVDjbZfzeTw32aV8CxA==}
     peerDependencies:
       react: '>=16.8.0'
       react-dom: '>=16.8.0'

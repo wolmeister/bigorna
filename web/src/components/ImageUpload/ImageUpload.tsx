@@ -5,16 +5,27 @@ import { showNotification } from '@mantine/notifications';
 import { X } from 'tabler-icons-react';
 
 import { DropzoneContent } from './DropzoneContent';
+import { useStyles } from './ImageUpload.styles';
 
 type ImageUploadProps = {
   label: string;
   error?: ReactNode;
   required?: boolean;
   value?: File | null;
+  disabled?: boolean;
   onChange: (file: File) => void;
 };
 
-export function ImageUpload({ label, error, required, value, onChange }: ImageUploadProps) {
+export function ImageUpload({
+  label,
+  error,
+  required,
+  value,
+  disabled,
+  onChange,
+}: ImageUploadProps) {
+  const { classes } = useStyles();
+
   const handleUpload = useCallback(
     (files: File[]) => {
       onChange(files[0]);
@@ -38,6 +49,8 @@ export function ImageUpload({ label, error, required, value, onChange }: ImageUp
         onReject={handleReject}
         multiple={false}
         accept={IMAGE_MIME_TYPE}
+        disabled={disabled}
+        className={disabled ? classes.disabled : undefined}
       >
         {status => <DropzoneContent status={status} file={value} />}
       </Dropzone>

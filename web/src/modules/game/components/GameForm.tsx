@@ -19,10 +19,11 @@ export type GameFormValues = z.infer<typeof schema>;
 export type GameFormState = UseFormReturnType<GameFormValues>;
 export type GameFormProps = {
   game?: Game | null;
-  onSubmit: (data: GameFormValues, form: GameFormState) => void | Promise<void>;
+  disabled?: boolean;
+  onSubmit?: (data: GameFormValues, form: GameFormState) => void | Promise<void>;
 };
 
-export function GameForm({ game, onSubmit }: GameFormProps) {
+export function GameForm({ game, disabled, onSubmit }: GameFormProps) {
   const form = useForm<GameFormValues>({
     schema: zodResolver(schema),
     initialValues: {
@@ -35,6 +36,10 @@ export function GameForm({ game, onSubmit }: GameFormProps) {
 
   const handleSubmit = useCallback(
     async (data: GameFormValues) => {
+      if (!onSubmit) {
+        return;
+      }
+
       try {
         setLoading(true);
         await Promise.resolve(onSubmit(data, form as UseFormReturnType<GameFormValues>));
@@ -64,28 +69,36 @@ export function GameForm({ game, onSubmit }: GameFormProps) {
     <form onSubmit={form.onSubmit(handleSubmit)}>
       <TextInput
         data-autofocus
-        required
+        required={!disabled}
         placeholder="The game name"
         label="Name"
         icon={<Signature size={18} />}
+        disabled={disabled}
         {...form.getInputProps('name')}
       />
-      <ImageUpload label="Poster" required {...form.getInputProps('poster')} />
-      <Group>
-        <Button type="submit" mt="xl" loading={loading}>
-          {game ? 'Update' : 'Create'}
-        </Button>
-        <Button
-          type="button"
-          mt="xl"
-          loading={loading}
-          variant="subtle"
-          component={Link}
-          to="/games"
-        >
-          Cancel
-        </Button>
-      </Group>
+      <ImageUpload
+        label="Poster"
+        required={!disabled}
+        disabled={disabled}
+        {...form.getInputProps('poster')}
+      />
+      {!disabled && (
+        <Group>
+          <Button type="submit" mt="xl" loading={loading}>
+            {game ? 'Update' : 'Create'}
+          </Button>
+          <Button
+            type="button"
+            mt="xl"
+            loading={loading}
+            variant="subtle"
+            component={Link}
+            to="/games"
+          >
+            Cancel
+          </Button>
+        </Group>
+      )}
     </form>
   );
 }

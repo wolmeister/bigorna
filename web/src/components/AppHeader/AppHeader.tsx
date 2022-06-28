@@ -64,7 +64,7 @@ export function AppHeader() {
             <Menu
               control={
                 <UnstyledButton>
-                  <Avatar color="orange" radius="xl">
+                  <Avatar color="purple" radius="xl">
                     {user.username.substring(0, 2).toUpperCase()}
                   </Avatar>
                 </UnstyledButton>

@@ -21,9 +21,21 @@ export const AddonResponseSchema = Type.Object({
 export type AddonResponse = Static<typeof AddonResponseSchema>;
 
 // Find Addons
+enum FindAddonsQueryOrderBy {
+  Downloads = 'downloads',
+  CreatedAt = 'createdAt',
+}
+
+enum FindAddonsQueryOrderByDirection {
+  Asc = 'asc',
+  Desc = 'desc',
+}
+
 export const FindAddonsQuerySchema = Type.Object({
   after: Type.Optional(Type.String()),
   first: Type.Optional(Type.Integer({ minimum: 1, maximum: 100, default: 50 })),
+  orderBy: Type.Optional(Type.Enum(FindAddonsQueryOrderBy)),
+  direction: Type.Optional(Type.Enum(FindAddonsQueryOrderByDirection)),
 });
 
 export type FindAddonsQuery = Static<typeof FindAddonsQuerySchema>;

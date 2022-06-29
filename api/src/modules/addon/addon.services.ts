@@ -25,7 +25,13 @@ interface AddonService {
 class AddonServiceImpl implements AddonService {
   findAddons(query: FindAddonsQuery): Promise<Connection<Addon, Edge<Addon>>> {
     return findManyCursorConnection(
-      args => prisma.addon.findMany(args),
+      args =>
+        prisma.addon.findMany({
+          ...args,
+          orderBy: {
+            [query.orderBy || 'createdAt']: query.direction,
+          },
+        }),
       () => prisma.addon.count(),
       query
     );

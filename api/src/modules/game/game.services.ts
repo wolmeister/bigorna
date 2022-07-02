@@ -1,6 +1,7 @@
 import { Connection, Edge, findManyCursorConnection } from '@devoxa/prisma-relay-cursor-connection';
 import { Game } from '@prisma/client';
 
+import { getPermanentUrl } from '../../common/minio.utilts';
 import { UploadedFile } from '../../common/uploaded-file';
 import { minioClient } from '../../minio';
 import { prisma } from '../../prisma';
@@ -113,16 +114,14 @@ class GameServiceImpl implements GameService {
     }
   }
 
-  private async convertAllToGameWithUrl(games: Game[]): Promise<GameWithUrl[]> {
-    return Promise.all(games.map(game => this.convertToGameWithUrl(game)));
+  private convertAllToGameWithUrl(games: Game[]): GameWithUrl[] {
+    return games.map(game => this.convertToGameWithUrl(game));
   }
 
-  private async convertToGameWithUrl(game: Game): Promise<GameWithUrl> {
-    const posterUrl = await minioClient.presignedGetObject(this.MINIO_BUCKET, game.id);
-
+  private convertToGameWithUrl(game: Game): GameWithUrl {
     return {
       ...game,
-      posterUrl,
+      posterUrl: getPermanentUrl(this.MINIO_BUCKET, game.id),
     };
   }
 }

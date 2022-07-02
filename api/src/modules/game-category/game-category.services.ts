@@ -1,6 +1,7 @@
 import { Connection, Edge, findManyCursorConnection } from '@devoxa/prisma-relay-cursor-connection';
 import { GameCategory } from '@prisma/client';
 
+import { getPermanentUrl } from '../../common/minio.utilts';
 import { UploadedFile } from '../../common/uploaded-file';
 import { minioClient } from '../../minio';
 import { prisma } from '../../prisma';
@@ -130,18 +131,14 @@ class GameCategoryServiceImpl implements GameCategoryService {
     }
   }
 
-  private async convertAllToGameCategoryWithUrl(
-    categories: GameCategory[]
-  ): Promise<GameCategoryWithUrl[]> {
-    return Promise.all(categories.map(game => this.convertToGameCategoryWithUrl(game)));
+  private convertAllToGameCategoryWithUrl(categories: GameCategory[]): GameCategoryWithUrl[] {
+    return categories.map(game => this.convertToGameCategoryWithUrl(game));
   }
 
-  private async convertToGameCategoryWithUrl(category: GameCategory): Promise<GameCategoryWithUrl> {
-    const iconUrl = await minioClient.presignedGetObject(this.MINIO_BUCKET, category.id);
-
+  private convertToGameCategoryWithUrl(category: GameCategory): GameCategoryWithUrl {
     return {
       ...category,
-      iconUrl,
+      iconUrl: getPermanentUrl(this.MINIO_BUCKET, category.id),
     };
   }
 }

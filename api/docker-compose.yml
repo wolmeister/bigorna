@@ -24,6 +24,29 @@ services:
       - '9001:9001'
     command: server --console-address ":9001" /data
 
+  mc:
+    container_name: minio-config-mc
+    image: minio/mc
+    depends_on:
+      - minio
+    environment:
+      MINIO_ACCESS_KEY: minio_access_key
+      MINIO_SECRET_KEY: minio_secret_key
+    entrypoint: >
+      /bin/sh -c "
+      /usr/bin/mc config host add src http://minio:9000 $${MINIO_ACCESS_KEY} $${MINIO_SECRET_KEY};
+      /usr/bin/mc mb src/addons;
+      /usr/bin/mc mb src/addons-images;
+      /usr/bin/mc mb src/avatars;
+      /usr/bin/mc mb src/categories;
+      /usr/bin/mc mb src/games;
+      /usr/bin/mc policy set download src/addons/;
+      /usr/bin/mc policy set download src/addons-images/;
+      /usr/bin/mc policy set download src/avatars/;
+      /usr/bin/mc policy set download src/categories/;
+      /usr/bin/mc policy set download src/games/;
+      "
+
 volumes:
   dbdata:
   miniodata:

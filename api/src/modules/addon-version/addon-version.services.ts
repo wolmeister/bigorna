@@ -1,6 +1,7 @@
 import { Connection, Edge, findManyCursorConnection } from '@devoxa/prisma-relay-cursor-connection';
 import { AddonVersion } from '@prisma/client';
 
+import { getPermanentUrl } from '../../common/minio.utilts';
 import { minioClient } from '../../minio';
 import { prisma } from '../../prisma';
 import {
@@ -135,18 +136,14 @@ class AddonVersionServiceImpl implements AddonVersionService {
     }
   }
 
-  private async convertAllToAddonVersionWithUrl(
-    versions: AddonVersion[]
-  ): Promise<AddonVersionWithUrl[]> {
-    return Promise.all(versions.map(version => this.convertToAddonVersionWithUrl(version)));
+  private convertAllToAddonVersionWithUrl(versions: AddonVersion[]): AddonVersionWithUrl[] {
+    return versions.map(version => this.convertToAddonVersionWithUrl(version));
   }
 
-  private async convertToAddonVersionWithUrl(version: AddonVersion): Promise<AddonVersionWithUrl> {
-    const downloadUrl = await minioClient.presignedGetObject(this.MINIO_BUCKET, version.id);
-
+  private convertToAddonVersionWithUrl(version: AddonVersion): AddonVersionWithUrl {
     return {
       ...version,
-      downloadUrl,
+      downloadUrl: getPermanentUrl(this.MINIO_BUCKET, version.id),
     };
   }
 }

@@ -23,6 +23,7 @@ export type AddonResponse = Static<typeof AddonResponseSchema>;
 
 // Find Addons
 export const FindAddonsQuerySchema = Type.Object({
+  uploaderId: Type.Optional(Type.String()),
   after: Type.Optional(Type.String()),
   first: Type.Optional(Type.Integer({ minimum: 1, maximum: 100, default: 50 })),
 });

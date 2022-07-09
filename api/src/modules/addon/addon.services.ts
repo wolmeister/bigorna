@@ -35,8 +35,11 @@ class AddonServiceImpl implements AddonService {
 
   findAddons(query: FindAddonsQuery): Promise<Connection<Addon, Edge<AddonWithUrl>>> {
     return findManyCursorConnection(
-      args => prisma.addon.findMany(args).then(addons => this.convertAllToAddonWithUrl(addons)),
-      () => prisma.addon.count(),
+      args =>
+        prisma.addon
+          .findMany({ ...args, where: { uploaderId: query.uploaderId } })
+          .then(addons => this.convertAllToAddonWithUrl(addons)),
+      () => prisma.addon.count({ where: { uploaderId: query.uploaderId } }),
       query
     );
   }

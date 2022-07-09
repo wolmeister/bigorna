@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { AppLayout } from '../../../components/AppLayout/AppLayout';
+
 export function SearchPage() {
-  return <h1>SearchPage</h1>;
+  return <AppLayout />;
 }

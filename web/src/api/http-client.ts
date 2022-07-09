@@ -1,3 +1,5 @@
+import { getToken } from '../modules/auth';
+
 export type RequestOptions<Q, P> = {
   query?: Q;
   params?: P;
@@ -120,6 +122,11 @@ export class HttpClientImpl implements HttpClient {
     const headers: HeadersInit = {};
     if (contentType) {
       headers['Content-Type'] = contentType;
+    }
+
+    const token = getToken();
+    if (token) {
+      headers.Authorization = `Bearer ${token}`;
     }
 
     // Perform the request

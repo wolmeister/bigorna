@@ -6,6 +6,7 @@ export interface Addon {
   id: string;
   name: string;
   description: string;
+  posterUrl: string;
   latestVersion: string;
   latestGameVersion: string;
   downloads: bigint;
@@ -20,6 +21,7 @@ export interface Addon {
 export interface CreateAddon {
   name: string;
   description: string;
+  poster: Blob;
   gameId: Game['id'];
   gameCategoryId: GameCategory['id'];
 }
@@ -27,6 +29,7 @@ export interface CreateAddon {
 export interface UpdateAddon {
   name: string;
   description: string;
+  poster: Blob;
   gameCategoryId: GameCategory['id'];
 }
 

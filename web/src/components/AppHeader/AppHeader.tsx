@@ -43,7 +43,7 @@ export function AppHeader() {
             Browse
           </Button>
           {user && (
-            <Button variant="subtle" component={Link} to="/new-addon">
+            <Button variant="subtle" component={Link} to="/my-addons">
               My Addons
             </Button>
           )}

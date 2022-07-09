@@ -1,12 +1,13 @@
 import { Static, Type } from '@sinclair/typebox';
 
-import { BigIntType, DateType } from '../../common/typebox-types';
+import { BigIntType, DateType, FileType } from '../../common/typebox-types';
 
 // Common
 export const AddonResponseSchema = Type.Object({
   id: Type.String(),
   name: Type.String(),
   description: Type.String(),
+  posterUrl: Type.String({ format: 'uri' }),
   latestVersion: Type.String(),
   latestGameVersion: Type.String(),
   downloads: BigIntType(),
@@ -57,6 +58,7 @@ export type FindAddonParams = Static<typeof FindAddonParamsSchema>;
 export const CreateAddonSchema = Type.Object({
   name: Type.String(),
   description: Type.String(),
+  poster: FileType(),
   gameId: Type.String(),
   gameCategoryId: Type.String(),
 });
@@ -67,6 +69,7 @@ export type CreateAddon = Static<typeof CreateAddonSchema>;
 export const UpdateAddonSchema = Type.Object({
   name: Type.String(),
   description: Type.String(),
+  poster: FileType(),
   gameCategoryId: Type.String(),
 });
 

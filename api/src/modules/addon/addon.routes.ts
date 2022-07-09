@@ -65,6 +65,7 @@ export const addonRoutes: FastifyPluginAsync = async server => {
     {
       schema: {
         tags: ['Addons'],
+        consumes: ['multipart/form-data'],
         body: CreateAddonSchema,
         response: {
           201: AddonResponseSchema,
@@ -84,6 +85,7 @@ export const addonRoutes: FastifyPluginAsync = async server => {
     {
       schema: {
         tags: ['Addons'],
+        consumes: ['multipart/form-data'],
         body: UpdateAddonSchema,
         params: UpdateAddonParamsSchema,
         response: {

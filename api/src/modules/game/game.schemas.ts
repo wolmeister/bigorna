@@ -6,7 +6,7 @@ import { DateType, FileType } from '../../common/typebox-types';
 export const GameResponseSchema = Type.Object({
   id: Type.String(),
   name: Type.String(),
-  posterUrl: Type.Union([Type.Null(), Type.String({ format: 'uri' })]),
+  posterUrl: Type.String({ format: 'uri' }),
   posterBlurhash: Type.Union([Type.Null(), Type.String()]),
   updatedAt: DateType(),
   createdAt: DateType(),

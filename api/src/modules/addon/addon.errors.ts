@@ -16,6 +16,11 @@ const GameCategoryIdNotFoundError = createError(
   'Game category id not found',
   404
 );
+export const InvalidAddonPosterError = createError(
+  'INVALID_ADDON_POSTER',
+  'Addon poster is not valid',
+  400
+);
 
 export function formatFindAddonError(error: unknown): FastifyError {
   if (error instanceof Error) {

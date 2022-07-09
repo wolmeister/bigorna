@@ -34,6 +34,7 @@ export interface UpdateAddon {
 }
 
 export interface FindAddonsQuery {
+  uploaderId?: string;
   after?: string;
   first?: number;
 }

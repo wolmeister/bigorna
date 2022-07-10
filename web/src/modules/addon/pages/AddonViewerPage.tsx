@@ -14,7 +14,6 @@ import {
   Tooltip,
   useMantineTheme,
 } from '@mantine/core';
-import { useModals } from '@mantine/modals';
 import { showNotification } from '@mantine/notifications';
 import RichTextEditor from '@mantine/rte';
 import { Download, InfoCircle, Versions, X } from 'tabler-icons-react';
@@ -43,7 +42,6 @@ export function AddonViewerPage() {
   const navigate = useNavigate();
   const { id } = useParams<RouteParams>();
   const theme = useMantineTheme();
-  const modals = useModals();
 
   const [addon, setAddon] = useState<Addon | null>(null);
   const [versions, setVersions] = useState<AddonVersion[]>([]);
@@ -109,7 +107,10 @@ export function AddonViewerPage() {
             }}
           >
             <Image src={addon?.posterUrl} fit="cover" height={220} width={220} radius="md" />
-            <Text size="xl"> {addon?.name}</Text>
+            <Text size="xl">{addon?.name}</Text>
+            <Text size="lg">
+              {game?.name} - {gameCategory?.name}
+            </Text>
             <Group style={{ alignSelf: 'flex-start', width: '100%' }} position="apart">
               <div>
                 <div style={{ display: 'flex', gap: 8 }}>

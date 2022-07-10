@@ -35,6 +35,9 @@ export interface UpdateAddon {
 
 export interface FindAddonsQuery {
   uploaderId?: string;
+  gameId?: string;
+  gameCategoryId?: string;
+  name?: string;
   after?: string;
   first?: number;
 }

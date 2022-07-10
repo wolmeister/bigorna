@@ -37,9 +37,25 @@ class AddonServiceImpl implements AddonService {
     return findManyCursorConnection(
       args =>
         prisma.addon
-          .findMany({ ...args, where: { uploaderId: query.uploaderId } })
+          .findMany({
+            ...args,
+            where: {
+              uploaderId: query.uploaderId,
+              gameId: query.gameId,
+              gameCategoryId: query.gameCategoryId,
+              name: { contains: query.name },
+            },
+          })
           .then(addons => this.convertAllToAddonWithUrl(addons)),
-      () => prisma.addon.count({ where: { uploaderId: query.uploaderId } }),
+      () =>
+        prisma.addon.count({
+          where: {
+            uploaderId: query.uploaderId,
+            gameId: query.gameId,
+            gameCategoryId: query.gameCategoryId,
+            name: { contains: query.name },
+          },
+        }),
       query
     );
   }

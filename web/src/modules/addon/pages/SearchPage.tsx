@@ -67,8 +67,8 @@ export function SearchPage() {
       <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
         {addons.map(addon => (
           <AppCard
-            key={addon.gameId}
-            navigateTo={`/addons/${addon.gameId}`}
+            key={addon.id}
+            navigateTo={`/addon-viewer/${addon.id}`}
             title={addon.name}
             subtitle={gameNameMap.get(addon.gameId)}
             imageUrl={addon.posterUrl}

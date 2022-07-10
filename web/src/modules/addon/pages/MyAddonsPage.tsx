@@ -62,8 +62,8 @@ export function MyAddonsPage() {
           </Anchor>
         </Breadcrumbs>
         <Group>
-          <Tooltip label="Create new game">
-            <ActionIcon variant="filled" component={Link} to="/new-game">
+          <Tooltip label="Create new addon">
+            <ActionIcon variant="filled" component={Link} to="/new-addon">
               <Plus color={theme.primaryColor} />
             </ActionIcon>
           </Tooltip>

@@ -97,7 +97,9 @@ export class HttpClientImpl implements HttpClient {
     const urlSearchParams = new URLSearchParams();
     if (options?.query) {
       Object.entries(options.query).forEach(([key, value]) => {
-        urlSearchParams.append(key, String(value));
+        if (value !== undefined) {
+          urlSearchParams.append(key, String(value));
+        }
       });
     }
 

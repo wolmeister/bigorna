@@ -30,8 +30,11 @@ class GameServiceImpl implements GameService {
 
   findGames(query: FindGamesQuery): Promise<Connection<GameWithUrl, Edge<GameWithUrl>>> {
     return findManyCursorConnection(
-      args => prisma.game.findMany(args).then(games => this.convertAllToGameWithUrl(games)),
-      () => prisma.game.count(),
+      args =>
+        prisma.game
+          .findMany({ ...args, where: { id: { in: query.ids } } })
+          .then(games => this.convertAllToGameWithUrl(games)),
+      () => prisma.game.count({ where: { id: { in: query.ids } } }),
       query
     );
   }

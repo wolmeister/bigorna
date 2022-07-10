@@ -16,6 +16,7 @@ export type GameResponse = Static<typeof GameResponseSchema>;
 
 // Find Games
 export const FindGamesQuerySchema = Type.Object({
+  ids: Type.Optional(Type.Array(Type.String())),
   after: Type.Optional(Type.String()),
   first: Type.Optional(Type.Integer({ minimum: 1, maximum: 100, default: 50 })),
 });

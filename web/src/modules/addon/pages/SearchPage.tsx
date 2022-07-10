@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { Anchor, Breadcrumbs, Divider } from '@mantine/core';
 
 import { addonService, gameService } from '../../../api';
@@ -12,6 +12,8 @@ import {
 } from '../components/AddonSearchFilterForm';
 
 export function SearchPage() {
+  const [searchParams] = useSearchParams();
+
   const [addons, setAddons] = useState<Addon[]>([]);
   const [gameNameMap, setGameNameMap] = useState(new Map<string, string>());
 
@@ -25,10 +27,10 @@ export function SearchPage() {
   }, []);
 
   useEffect(() => {
-    addonService.findAddons({}).then(result => {
+    addonService.findAddons({ gameId: searchParams.get('gameId') || undefined }).then(result => {
       setAddons(result.edges.map(edge => edge.node));
     });
-  }, []);
+  }, [searchParams]);
 
   useEffect(() => {
     const ids = [...new Set(addons.map(a => a.gameId))];
@@ -62,7 +64,10 @@ export function SearchPage() {
         </Anchor>
       </Breadcrumbs>
       <Divider mt="md" mb="md" />
-      <AddonSearchFilterForm onSubmit={handleSubmit} />
+      <AddonSearchFilterForm
+        gameId={searchParams.get('gameId') || undefined}
+        onSubmit={handleSubmit}
+      />
       <Divider mt="md" mb="md" />
       <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
         {addons.map(addon => (

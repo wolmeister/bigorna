@@ -1,117 +1,96 @@
-import React from 'react';
-import { Card, Image, Text, Title } from '@mantine/core';
+import React, { useEffect, useState } from 'react';
+import { Title } from '@mantine/core';
 
+import { addonService, gameService } from '../../../api';
+import { Addon } from '../../../api/addon';
+import { Game } from '../../../api/game';
+import { AppCard } from '../../../components/AppCard/AppCard';
 import { AppLayout } from '../../../components/AppLayout/AppLayout';
 
 export function AddonsPage() {
+  const [topGames, setTopGames] = useState<Game[]>([]);
+  const [mostDownloadedAddons, setMostDownloadedAddons] = useState<Addon[]>([]);
+  const [newAddons, setNewAddons] = useState<Addon[]>([]);
+
+  const [gameNameMap, setGameNameMap] = useState(new Map<string, string>());
+
+  useEffect(() => {
+    gameService.findGames({ first: 5 }).then(result => {
+      setTopGames(result.edges.map(edge => edge.node));
+    });
+    addonService.findAddons({ first: 5 }).then(result => {
+      setMostDownloadedAddons(result.edges.map(edge => edge.node));
+    });
+    addonService.findAddons({ first: 5 }).then(result => {
+      setNewAddons(result.edges.map(edge => edge.node));
+    });
+  }, []);
+
+  useEffect(() => {
+    const allAddons = mostDownloadedAddons.concat(newAddons);
+    const ids = [...new Set(allAddons.map(a => a.gameId))];
+
+    if (ids.length === 1) {
+      gameService.findGameById(ids[0]).then(game => {
+        const map = new Map<string, string>();
+        map.set(game.id, game.name);
+        setGameNameMap(map);
+      });
+      return;
+    }
+
+    gameService.findGames({ ids }).then(result => {
+      const map = new Map<string, string>();
+      result.edges.forEach(edge => {
+        map.set(edge.node.id, edge.node.name);
+      });
+      setGameNameMap(map);
+    });
+  }, [mostDownloadedAddons, newAddons]);
+
   return (
     <AppLayout>
-      <Title order={2} style={{ margin: 0, marginBottom: 16 }} color="primary">
+      <Title order={2} m={0} mb={16} color="primary">
         Top Games
       </Title>
-      <Card shadow="sm" p="xl" style={{ width: 200 }}>
-        <Card.Section style={{ position: 'relative' }}>
-          <Image
-            height={160}
-            width={200}
-            src="https://images.unsplash.com/photo-1579227114347-15d08fc37cae?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2550&q=80"
+      <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
+        {topGames.map(game => (
+          <AppCard
+            key={game.id}
+            navigateTo={`/search?gameId=${game.id}`}
+            title={game.name}
+            imageUrl={game.posterUrl}
           />
-          <div
-            style={{
-              width: '100%',
-              position: 'absolute',
-              bottom: 0,
-              display: 'flex',
-              justifyContent: 'center',
-              backgroundColor: 'rgba(0,0,0,.50)',
-            }}
-          >
-            <Text weight={500} size="lg" style={{ textAlign: 'center' }}>
-              World of Warcraft
-            </Text>
-          </div>
-        </Card.Section>
-      </Card>
-      <Title order={2} style={{ margin: 0, marginTop: 32, marginBottom: 16 }}>
+        ))}
+      </div>
+      <Title order={2} m={0} mt={32} mb={16}>
         Most Downloaded Addons
       </Title>
-      <Card shadow="sm" p="xl" style={{ width: 200 }}>
-        <Card.Section style={{ position: 'relative' }}>
-          <Image
-            height={160}
-            width={200}
-            src="https://images.unsplash.com/photo-1579227114347-15d08fc37cae?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2550&q=80"
+      <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
+        {mostDownloadedAddons.map(addon => (
+          <AppCard
+            key={addon.id}
+            navigateTo={`/addon-viewer/${addon.id}`}
+            title={addon.name}
+            subtitle={gameNameMap.get(addon.gameId)}
+            imageUrl={addon.posterUrl}
           />
-          <div
-            style={{
-              width: '100%',
-              position: 'absolute',
-              top: 0,
-              display: 'flex',
-              justifyContent: 'center',
-              backgroundColor: 'rgba(0,0,0,.50)',
-            }}
-          >
-            <Text weight={500} size="lg" style={{ textAlign: 'center' }}>
-              Weak Auras
-            </Text>
-          </div>
-          <div
-            style={{
-              width: '100%',
-              position: 'absolute',
-              bottom: 0,
-              display: 'flex',
-              justifyContent: 'center',
-              backgroundColor: 'rgba(0,0,0,.50)',
-            }}
-          >
-            <Text weight={500} size="lg" style={{ textAlign: 'center' }}>
-              World of Warcraft
-            </Text>
-          </div>
-        </Card.Section>
-      </Card>
-      <Title order={2} style={{ margin: 0, marginTop: 32, marginBottom: 16 }}>
+        ))}
+      </div>
+      <Title order={2} m={0} mt={32} mb={16}>
         New Addons
       </Title>
-      <Card shadow="sm" p="xl" style={{ width: 200 }}>
-        <Card.Section style={{ position: 'relative' }}>
-          <Image
-            height={160}
-            width={200}
-            src="https://images.unsplash.com/photo-1579227114347-15d08fc37cae?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2550&q=80"
+      <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
+        {newAddons.map(addon => (
+          <AppCard
+            key={addon.id}
+            navigateTo={`/addon-viewer/${addon.id}`}
+            title={addon.name}
+            subtitle={gameNameMap.get(addon.gameId)}
+            imageUrl={addon.posterUrl}
           />
-          <div
-            style={{
-              width: '100%',
-              position: 'absolute',
-              top: 0,
-              display: 'flex',
-              justifyContent: 'center',
-              backgroundColor: 'rgba(0,0,0,.50)',
-            }}
-          >
-            <Text weight={500} size="lg" style={{ textAlign: 'center' }}>
-              Weak Auras
-            </Text>
-          </div>
-          <div
-            style={{
-              width: '100%',
-              position: 'absolute',
-              bottom: 0,
-              display: 'flex',
-              justifyContent: 'center',
-              backgroundColor: 'rgba(0,0,0,.50)',
-            }}
-          >
-            <Text weight={500} size="lg" style={{ textAlign: 'center' }}>
-              World of Warcraft
-            </Text>
-          </div>
-        </Card.Section>
-      </Card>
+        ))}
+      </div>
     </AppLayout>
   );
 }

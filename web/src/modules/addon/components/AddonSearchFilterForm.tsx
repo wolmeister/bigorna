@@ -26,6 +26,7 @@ export type AddonSearchFilterFormValues = {
 };
 export type AddonSearchFilterFormProps = {
   onSubmit: (data: AddonSearchFilterFormValues) => void | Promise<void>;
+  gameId?: string;
 };
 
 const emptyFilter: AddonSearchFilterFormValues = {
@@ -37,7 +38,7 @@ const emptyFilter: AddonSearchFilterFormValues = {
   gameCategory: { id: '', value: '' },
 };
 
-export function AddonSearchFilterForm({ onSubmit }: AddonSearchFilterFormProps) {
+export function AddonSearchFilterForm({ onSubmit, gameId }: AddonSearchFilterFormProps) {
   // Form state
   const form = useForm<AddonSearchFilterFormValues>({
     initialValues: emptyFilter,
@@ -67,8 +68,16 @@ export function AddonSearchFilterForm({ onSubmit }: AddonSearchFilterFormProps) 
   useEffect(() => {
     gameService.findGames({}).then(result => {
       setGames(result.edges.map(edge => ({ id: edge.node.id, value: edge.node.name })));
+
+      if (gameId) {
+        const gameEdge = result.edges.find(edge => edge.cursor === gameId);
+        if (gameEdge) {
+          formRef.current.setFieldValue('gameSearch', gameEdge.node.name);
+          formRef.current.setFieldValue('game', { id: gameEdge.cursor, value: gameEdge.node.name });
+        }
+      }
     });
-  }, []);
+  }, [gameId]);
 
   const [categories, setCategories] = useState<AutocompleteItem[]>([]);
   useEffect(() => {

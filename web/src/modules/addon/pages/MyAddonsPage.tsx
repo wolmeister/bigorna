@@ -11,7 +11,7 @@ import {
 } from '@mantine/core';
 import { Plus } from 'tabler-icons-react';
 
-import { addonService } from '../../../api';
+import { addonService, gameService } from '../../../api';
 import { Addon } from '../../../api/addon';
 import { AppCard } from '../../../components/AppCard/AppCard';
 import { AppLayout } from '../../../components/AppLayout/AppLayout';
@@ -21,12 +21,34 @@ export function MyAddonsPage() {
   const theme = useMantineTheme();
   const user = useUser();
   const [addons, setAddons] = useState<Addon[]>([]);
+  const [gameNameMap, setGameNameMap] = useState(new Map<string, string>());
 
   useEffect(() => {
     addonService.findAddons({ uploaderId: user?.id }).then(result => {
       setAddons(result.edges.map(edge => edge.node));
     });
   }, [user?.id]);
+
+  useEffect(() => {
+    const ids = [...new Set(addons.map(a => a.gameId))];
+
+    if (ids.length === 1) {
+      gameService.findGameById(ids[0]).then(game => {
+        const map = new Map<string, string>();
+        map.set(game.id, game.name);
+        setGameNameMap(map);
+      });
+      return;
+    }
+
+    gameService.findGames({ ids }).then(result => {
+      const map = new Map<string, string>();
+      result.edges.forEach(edge => {
+        map.set(edge.node.id, edge.node.name);
+      });
+      setGameNameMap(map);
+    });
+  }, [addons]);
 
   return (
     <AppLayout>
@@ -54,6 +76,7 @@ export function MyAddonsPage() {
             key={addon.id}
             navigateTo={`/addons/${addon.id}`}
             title={addon.name}
+            subtitle={gameNameMap.get(addon.gameId)}
             imageUrl={addon.posterUrl}
           />
         ))}

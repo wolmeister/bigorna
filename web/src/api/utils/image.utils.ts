@@ -5,3 +5,5 @@ export async function getImageFromUrl(url: string, defaultType = 'image/jpeg') {
     type: data.type || defaultType,
   });
 }
+
+export const getFileFromUrl = getImageFromUrl;

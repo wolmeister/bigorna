@@ -6,16 +6,28 @@ import {
   Breadcrumbs,
   Divider,
   Group,
+  Table,
+  Tabs,
   Text,
   Tooltip,
   useMantineTheme,
 } from '@mantine/core';
 import { useModals } from '@mantine/modals';
 import { showNotification } from '@mantine/notifications';
-import { Pencil, Trash, X } from 'tabler-icons-react';
+import {
+  CodePlus,
+  Download,
+  Eye,
+  InfoCircle,
+  Pencil,
+  Trash,
+  Versions,
+  X,
+} from 'tabler-icons-react';
 
-import { addonService } from '../../../api';
+import { addonService, addonVersionService } from '../../../api';
 import { Addon } from '../../../api/addon';
+import { AddonVersion } from '../../../api/addon-version';
 import { AppLayout } from '../../../components/AppLayout/AppLayout';
 import { AddonForm } from '../components/AddonForm';
 
@@ -39,6 +51,7 @@ export function AddonPage() {
   const modals = useModals();
 
   const [addon, setAddon] = useState<Addon | null>(null);
+  const [versions, setVersions] = useState<AddonVersion[]>([]);
 
   const deleteCategory = useCallback(() => {
     modals.openConfirmModal({
@@ -91,6 +104,10 @@ export function AddonPage() {
         showNoCategoryFoundNotification();
         navigate('/');
       });
+
+    addonVersionService.findAddonVersions({ addonId: id }).then(result => {
+      setVersions(result.edges.map(edge => edge.node));
+    });
   }, [id, navigate]);
 
   return (
@@ -108,6 +125,11 @@ export function AddonPage() {
           </Anchor>
         </Breadcrumbs>
         <Group>
+          <Tooltip label="Add version">
+            <ActionIcon variant="filled" component={Link} to={`/addons/${addon?.id}/new-version`}>
+              <CodePlus color={theme.primaryColor} />
+            </ActionIcon>
+          </Tooltip>
           <Tooltip label="Edit">
             <ActionIcon variant="filled" component={Link} to={`/addons/${addon?.id}/update`}>
               <Pencil color={theme.primaryColor} />
@@ -121,7 +143,59 @@ export function AddonPage() {
         </Group>
       </Group>
       <Divider mt="md" mb="md" />
-      {addon ? <AddonForm addon={addon} disabled /> : null}
+      <Tabs>
+        <Tabs.Tab label="Addon" icon={<InfoCircle size={14} />}>
+          {addon ? <AddonForm addon={addon} disabled /> : null}
+        </Tabs.Tab>
+        <Tabs.Tab label="Versions" icon={<Versions size={14} />}>
+          <Table>
+            <thead>
+              <tr>
+                <th>Version</th>
+                <th>Game Version</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {versions.map(version => (
+                <tr key={version.id}>
+                  <td>{version.version}</td>
+                  <td>{version.gameVersion}</td>
+                  <td style={{ width: '150px' }}>
+                    <Group>
+                      <Tooltip label="Download">
+                        <ActionIcon variant="filled">
+                          <a href={version.downloadUrl}>
+                            <Download color={theme.primaryColor} />
+                          </a>
+                        </ActionIcon>
+                      </Tooltip>
+                      <Tooltip label="View version">
+                        <ActionIcon
+                          variant="filled"
+                          component={Link}
+                          to={`/addon-versions/${version.id}`}
+                        >
+                          <Eye color={theme.primaryColor} />
+                        </ActionIcon>
+                      </Tooltip>
+                      <Tooltip label="Edit">
+                        <ActionIcon
+                          variant="filled"
+                          component={Link}
+                          to={`/addon-versions/${version.id}/update`}
+                        >
+                          <Pencil color={theme.primaryColor} />
+                        </ActionIcon>
+                      </Tooltip>
+                    </Group>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        </Tabs.Tab>
+      </Tabs>
     </AppLayout>
   );
 }

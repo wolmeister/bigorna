@@ -21,8 +21,11 @@ export function AddonsPage() {
     addonService.findAddons({ first: 5 }).then(result => {
       setMostDownloadedAddons(result.edges.map(edge => edge.node));
     });
-    addonService.findAddons({ first: 5 }).then(result => {
-      setNewAddons(result.edges.map(edge => edge.node));
+    addonService.findAddons({}).then(result => {
+      // criminal...
+      const addons = result.edges.map(edge => edge.node);
+      addons.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+      setNewAddons(addons.slice(0, 5));
     });
   }, []);
 

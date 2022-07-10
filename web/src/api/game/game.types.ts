@@ -20,6 +20,7 @@ export interface UpdateGame {
 }
 
 export interface FindGamesQuery {
+  ids?: string[];
   after?: string;
   first?: number;
 }

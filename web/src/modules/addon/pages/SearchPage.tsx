@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Anchor, Breadcrumbs, Divider } from '@mantine/core';
 
-import { addonService } from '../../../api';
+import { addonService, gameService } from '../../../api';
 import { Addon } from '../../../api/addon';
 import { AppCard } from '../../../components/AppCard/AppCard';
 import { AppLayout } from '../../../components/AppLayout/AppLayout';
@@ -13,6 +13,7 @@ import {
 
 export function SearchPage() {
   const [addons, setAddons] = useState<Addon[]>([]);
+  const [gameNameMap, setGameNameMap] = useState(new Map<string, string>());
 
   const handleSubmit = useCallback(async (data: AddonSearchFilterFormValues) => {
     const addonNodes = await addonService.findAddons({
@@ -28,6 +29,27 @@ export function SearchPage() {
       setAddons(result.edges.map(edge => edge.node));
     });
   }, []);
+
+  useEffect(() => {
+    const ids = [...new Set(addons.map(a => a.gameId))];
+
+    if (ids.length === 1) {
+      gameService.findGameById(ids[0]).then(game => {
+        const map = new Map<string, string>();
+        map.set(game.id, game.name);
+        setGameNameMap(map);
+      });
+      return;
+    }
+
+    gameService.findGames({ ids }).then(result => {
+      const map = new Map<string, string>();
+      result.edges.forEach(edge => {
+        map.set(edge.node.id, edge.node.name);
+      });
+      setGameNameMap(map);
+    });
+  }, [addons]);
 
   return (
     <AppLayout>
@@ -45,9 +67,10 @@ export function SearchPage() {
       <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
         {addons.map(addon => (
           <AppCard
-            key={addon.id}
-            navigateTo={`/addons/${addon.id}`}
+            key={addon.gameId}
+            navigateTo={`/addons/${addon.gameId}`}
             title={addon.name}
+            subtitle={gameNameMap.get(addon.gameId)}
             imageUrl={addon.posterUrl}
           />
         ))}

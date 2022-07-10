@@ -6,9 +6,10 @@ type AppCardProps = {
   navigateTo: string;
   imageUrl: string;
   title: string;
+  subtitle?: string;
 };
 
-export function AppCard({ navigateTo, imageUrl, title }: AppCardProps) {
+export function AppCard({ navigateTo, imageUrl, title, subtitle }: AppCardProps) {
   return (
     <Card
       shadow="sm"
@@ -19,6 +20,22 @@ export function AppCard({ navigateTo, imageUrl, title }: AppCardProps) {
     >
       <Card.Section style={{ position: 'relative' }}>
         <Image height={160} width={200} src={imageUrl} />
+        {subtitle ? (
+          <div
+            style={{
+              width: '100%',
+              position: 'absolute',
+              top: 0,
+              display: 'flex',
+              justifyContent: 'center',
+              backgroundColor: 'rgba(0,0,0,.50)',
+            }}
+          >
+            <Text weight={500} size="lg" style={{ textAlign: 'center' }}>
+              {subtitle}
+            </Text>
+          </div>
+        ) : null}
         <div
           style={{
             width: '100%',

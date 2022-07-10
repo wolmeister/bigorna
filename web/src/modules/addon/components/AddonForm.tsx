@@ -20,10 +20,12 @@ type AutocompleteItem = {
 const schema = z.object({
   name: z.string(),
   description: z.string().min(1, 'Please fill the description'),
+  gameSearch: z.string(),
   game: z.object({
     id: z.string(),
     value: z.string(),
   }),
+  gameCategorySearch: z.string(),
   gameCategory: z.object({
     id: z.string(),
     value: z.string(),
@@ -46,7 +48,9 @@ export function AddonForm({ addon, disabled, onSubmit }: AddonFormProps) {
     initialValues: {
       name: addon ? addon.name : '',
       description: addon ? addon.description : '',
+      gameSearch: '',
       game: { id: '', value: '' },
+      gameCategorySearch: '',
       gameCategory: { id: '', value: '' },
       poster: {} as File,
     },
@@ -100,12 +104,14 @@ export function AddonForm({ addon, disabled, onSubmit }: AddonFormProps) {
       formRef.current.setFieldValue('name', addon.name);
       formRef.current.setFieldValue('description', addon.description);
       gameService.findGameById(addon.gameId).then(game => {
+        formRef.current.setFieldValue('gameSearch', game.name);
         formRef.current.setFieldValue('game', {
           id: game.id,
           value: game.name,
         });
       });
       gameCategoryService.findGameCategoryById(addon.gameCategoryId).then(category => {
+        formRef.current.setFieldValue('gameCategorySearch', category.name);
         formRef.current.setFieldValue('gameCategory', {
           id: category.id,
           value: category.name,
@@ -134,8 +140,7 @@ export function AddonForm({ addon, disabled, onSubmit }: AddonFormProps) {
         required={!disabled}
         disabled={disabled || !!addon}
         mt={16}
-        value={form.values.game.value}
-        error={form.getInputProps('game').error}
+        {...form.getInputProps('gameSearch')}
         onItemSubmit={(item: AutocompleteItem) => {
           form.getInputProps('game').onChange(item);
         }}
@@ -146,8 +151,7 @@ export function AddonForm({ addon, disabled, onSubmit }: AddonFormProps) {
         required={!disabled}
         disabled={disabled || !form.values.game.id}
         mt={16}
-        value={form.values.gameCategory.value}
-        error={form.getInputProps('gameCategory').error}
+        {...form.getInputProps('gameCategorySearch')}
         onItemSubmit={(item: AutocompleteItem) => {
           form.getInputProps('gameCategory').onChange(item);
         }}

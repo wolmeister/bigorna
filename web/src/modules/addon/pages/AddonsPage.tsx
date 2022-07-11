@@ -56,7 +56,7 @@ export function AddonsPage() {
       <Title order={2} m={0} mb={16} color="primary">
         Top Games
       </Title>
-      <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
+      <div style={{ display: 'flex', gap: '24px', flexWrap: 'wrap' }}>
         {topGames.map(game => (
           <AppCard
             key={game.id}

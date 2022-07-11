@@ -139,7 +139,7 @@ export function GamePage() {
           <GameForm game={game} disabled />
         </Tabs.Tab>
         <Tabs.Tab label="Categories" icon={<Folders size={14} />}>
-          <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', gap: '24px', flexWrap: 'wrap' }}>
             {categories.map(category => (
               <AppCard
                 key={category.id}

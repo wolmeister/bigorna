@@ -34,7 +34,7 @@ export function AppHeader() {
     <Header height={60} pl="md" pr="md">
       <Group className={classes.group} position="apart">
         <Link className={classes.logoContainer} to="/">
-          <Image src="/public/favicon.png" mr="md" fit="contain" height={40} width={40} />
+          <Image src="/favicon.png" mr="md" fit="contain" height={40} width={40} />
           <Title order={2}>BIGORNA</Title>
         </Link>
 

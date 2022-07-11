@@ -4,11 +4,8 @@ import {
   ActionIcon,
   Anchor,
   Breadcrumbs,
-  Card,
   Divider,
   Group,
-  Image,
-  Text,
   Tooltip,
   useMantineTheme,
 } from '@mantine/core';
@@ -16,6 +13,7 @@ import { Plus } from 'tabler-icons-react';
 
 import { gameService } from '../../../api';
 import { Game } from '../../../api/game';
+import { AppCard } from '../../../components/AppCard/AppCard';
 import { AppLayout } from '../../../components/AppLayout/AppLayout';
 
 export function GamesPage() {
@@ -48,34 +46,14 @@ export function GamesPage() {
         </Group>
       </Group>
       <Divider mt="md" mb="md" />
-      <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
+      <div style={{ display: 'flex', gap: '24px', flexWrap: 'wrap' }}>
         {games.map(game => (
-          <Card
-            shadow="sm"
-            p="xl"
-            style={{ width: 200, cursor: 'pointer' }}
+          <AppCard
             key={game.id}
-            component={Link}
-            to={`/games/${game.id}`}
-          >
-            <Card.Section style={{ position: 'relative' }}>
-              <Image height={160} width={200} src={game.posterUrl} />
-              <div
-                style={{
-                  width: '100%',
-                  position: 'absolute',
-                  bottom: 0,
-                  display: 'flex',
-                  justifyContent: 'center',
-                  backgroundColor: 'rgba(0,0,0,.50)',
-                }}
-              >
-                <Text weight={500} size="lg" style={{ textAlign: 'center' }}>
-                  {game.name}
-                </Text>
-              </div>
-            </Card.Section>
-          </Card>
+            title={game.name}
+            imageUrl={game.posterUrl}
+            navigateTo={`/games/${game.id}`}
+          />
         ))}
       </div>
     </AppLayout>

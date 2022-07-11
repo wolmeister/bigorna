@@ -7,9 +7,16 @@ type AppCardProps = {
   imageUrl: string;
   title: string;
   subtitle?: string;
+  imageHeight?: number;
 };
 
-export function AppCard({ navigateTo, imageUrl, title, subtitle }: AppCardProps) {
+export function AppCard({
+  navigateTo,
+  imageUrl,
+  title,
+  subtitle,
+  imageHeight = 300,
+}: AppCardProps) {
   return (
     <Card
       shadow="sm"
@@ -19,7 +26,7 @@ export function AppCard({ navigateTo, imageUrl, title, subtitle }: AppCardProps)
       to={navigateTo}
     >
       <Card.Section style={{ position: 'relative' }}>
-        <Image height={160} width={200} src={imageUrl} />
+        <Image height={imageHeight} width={200} src={imageUrl} radius="md" />
         {subtitle ? (
           <div
             style={{

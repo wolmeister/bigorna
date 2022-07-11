@@ -69,7 +69,7 @@ export function SearchPage() {
         onSubmit={handleSubmit}
       />
       <Divider mt="md" mb="md" />
-      <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
+      <div style={{ display: 'flex', gap: '24px', flexWrap: 'wrap' }}>
         {addons.map(addon => (
           <AppCard
             key={addon.id}
